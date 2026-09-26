@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#087b8c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EuroMed">
+<title>EuroMed — Hub Technicien</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="phone">
+
+  <header class="topbar">
+    <div class="logo-wrap">
+      <div class="logo">E</div>
+      <div>
+        <div class="brand">EUROMED</div>
+        <div class="subtitle">Hub Technicien</div>
+      </div>
+    </div>
+    <button class="menu-btn" aria-label="Menu">•••</button>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <div>
+        <span class="hello">ESPACE TECHNICIEN</span>
+        <h1>Bonjour 👋</h1>
+        <p>Accédez rapidement à vos outils terrain.</p>
+      </div>
+      <div class="online"><i></i> En ligne</div>
+    </section>
+
+    <label class="search">
+      <span>⌕</span>
+      <input id="search" type="search" placeholder="Rechercher un outil…" autocomplete="off">
+    </label>
+
+    <section class="category">
+      <div class="cat-title">
+        <span class="cat-icon blue">▣</span>
+        <div><strong>Interventions</strong><small>Documents et opérations terrain</small></div>
+      </div>
+
+      <div class="apps">
+        <a class="app app-orange" href="https://hawaryou.github.io/Bon-de-livraison-euromed/" target="_blank" rel="noopener" data-search="bon livraison carnet livraison">
+          <div class="app-icon">▤</div>
+          <div><b>Carnet de<br>livraison</b><span>Créer un bon</span></div>
+          <em>↗</em>
+        </a>
+
+        <a class="app app-teal" href="https://hawaryou.github.io/inventaire-materiel/" target="_blank" rel="noopener" data-search="inventaire matériel stock">
+          <div class="app-icon">▦</div>
+          <div><b>Inventaire<br>matériel</b><span>Gérer le matériel</span></div>
+          <em>↗</em>
+        </a>
+      </div>
+    </section>
+
+    <section class="category">
+      <div class="cat-title">
+        <span class="cat-icon purple">⚙</span>
+        <div><strong>Maintenance</strong><small>Contrôle et suivi des équipements</small></div>
+      </div>
+
+      <div class="maintenance-list">
+        <a class="maintenance active" href="https://hawaryou.github.io/maintenance-lit-medical/" target="_blank" rel="noopener" data-search="maintenance lit médicalisé lit">
+          <span class="equip-icon bed">▰</span>
+          <div><b>Lit médicalisé</b><small>Maintenance et contrôles</small></div>
+          <span class="status">DISPONIBLE</span><strong>›</strong>
+        </a>
+
+        <div class="maintenance future" data-search="maintenance fauteuil roulant">
+          <span class="equip-icon chair">♿</span>
+          <div><b>Fauteuil roulant</b><small>Maintenance et contrôles</small></div>
+          <span class="status">À VENIR</span><strong>›</strong>
+        </div>
+
+        <div class="maintenance future" data-search="maintenance matelas air">
+          <span class="equip-icon mattress">≈</span>
+          <div><b>Matelas à air</b><small>Maintenance et contrôles</small></div>
+          <span class="status">À VENIR</span><strong>›</strong>
+        </div>
+
+        <div class="maintenance future" data-search="maintenance soulève personne verticalisateur">
+          <span class="equip-icon lift">⇅</span>
+          <div><b>Soulève-personne / verticalisateur</b><small>Maintenance et contrôles</small></div>
+          <span class="status">À VENIR</span><strong>›</strong>
+        </div>
+      </div>
+    </section>
+
+    <div id="empty" class="empty" hidden>Aucun outil trouvé.</div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a class="nav active" href="#accueil"><span>⌂</span><small>Accueil</small></a>
+    <a class="nav" href="#outils"><span>▦</span><small>Outils</small></a>
+    <a class="nav" href="#maintenance"><span>⚙</span><small>Maintenance</small></a>
+    <a class="nav" href="#infos"><span>ⓘ</span><small>Infos</small></a>
+  </nav>
+
+  <div class="safe-bottom"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
