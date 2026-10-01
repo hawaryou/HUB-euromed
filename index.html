@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6fbff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="EuroMed">
+<title>EuroMed — Hub Technicien</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <main id="app" class="app-content"></main>
+
+  <nav class="bottom-nav" aria-label="Navigation principale">
+    <button class="nav-item active" data-page="home" type="button">
+      <span class="nav-icon">⌂</span><span>Accueil</span>
+    </button>
+    <button class="nav-item" data-page="maintenance" type="button">
+      <span class="nav-icon">⚙</span><span>Maintenance</span>
+    </button>
+    <a class="nav-item" href="https://hawaryou.github.io/envoi_pdf_euromed/">
+      <span class="nav-icon">▤</span><span>Documentation</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+const MAINTENANCE = [
+  {id:'lit', title:'Lit médicalisé', subtitle:'Contrôle et certificat de maintenance', url:'https://hawaryou.github.io/maintenance-lit-medical/', cls:'blue', icon:'▰'},
+  {id:'fauteuil', title:'Fauteuil roulant', subtitle:'Maintenance et contrôles', url:'https://hawaryou.github.io/maintenance-fauteuil-roulant/', cls:'pink', icon:'♿'},
+  {id:'matelas', title:'Matelas à air', subtitle:'Maintenance du système alternating', url:'https://hawaryou.github.io/maintenance-matelas-alternating/', cls:'yellow', icon:'≈'},
+  {id:'leve', title:'Lève-personne', subtitle:'Maintenance et contrôles', url:'https://hawaryou.github.io/maintenance-leve-personne/', cls:'green', icon:'⇅'},
+  {id:'verticalisateur', title:'Verticalisateur', subtitle:'Maintenance et contrôles', url:'https://hawaryou.github.io/maintenance-verticalisateur/', cls:'violet', icon:'↕'}
+];
+
+const app = document.getElementById('app');
+const navItems = [...document.querySelectorAll('.nav-item')];
+
+function logoAndMascot(){
+  return `<div class="top-brand">
+    <img class="logo" src="assets/euromed-logo.png" alt="EuroMed">
+    <div class="mascot-wrap"><img class="mascot" src="assets/chibi-euromed.png" alt="Mascotte EuroMed au pouce levé"></div>
+  </div>`;
+}
+
+function arrow(){ return '<span class="card-arrow">›</span>'; }
+
+function maintenanceCard(item, compact=false){
+  return `<a class="maintenance-card ${item.cls} ${compact?'compact':''}" href="${item.url}">
+    <span class="equipment-icon">${item.icon}</span>
+    <span class="card-copy"><b>${item.title}</b><small>${item.subtitle}</small></span>
+    <span class="open-pill">OUVRIR</span>${arrow()}
+  </a>`;
+}
+
+function home(){
+  app.innerHTML = `
+    <section class="hero">
+      ${logoAndMascot()}
+      <div class="hero-badge">HUB TECHNICIEN</div>
+      <h1>Vos outils,<br><em>au même endroit.</em></h1>
+      <p>Un accès simple et rapide aux applications terrain EuroMed.</p>
+      <div class="hero-decoration d1"></div><div class="hero-decoration d2"></div>
+    </section>
+
+    <section class="content-section welcome-card">
+      <div class="check-circle">✓</div>
+      <div><b>Prêt pour l’intervention</b><span>Sélectionnez simplement l’outil dont vous avez besoin.</span></div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title"><div><span class="eyebrow cyan-text">OUTILS TERRAIN</span><h2>Interventions</h2><p>Vos documents et opérations du quotidien</p></div></div>
+      <div class="tool-grid">
+        <a class="tool-card orange" href="https://hawaryou.github.io/Bon-de-livraison-euromed/">
+          <span class="tool-icon">▤</span><span class="tool-title">Carnet de<br>livraison</span><span class="tool-sub">Créer un bon de livraison</span>${arrow()}
+        </a>
+        <a class="tool-card turquoise" href="https://hawaryou.github.io/inventaire-materiel/">
+          <span class="tool-icon">▦</span><span class="tool-title">Inventaire<br>matériel</span><span class="tool-sub">Gérer le matériel</span>${arrow()}
+        </a>
+      </div>
+    </section>
+
+    <section class="content-section maintenance-preview">
+      <div class="section-title row-title"><div><span class="eyebrow purple-text">CONTRÔLE & SUIVI</span><h2>Maintenance</h2><p>Tous les équipements en un seul endroit</p></div><button class="see-all" data-page="maintenance">Voir tout</button></div>
+      <div class="maintenance-list">${MAINTENANCE.map(x=>maintenanceCard(x)).join('')}</div>
+    </section>
+
+    <section class="tip-card"><span class="tip-icon">✦</span><div><b>Astuce technicien</b><span>Utilisez la barre du bas pour passer rapidement de l’accueil aux maintenances et à la documentation.</span></div></section>
+    <footer>EUROMED · Votre partenaire en matériel médical</footer>`;
+
+  app.querySelector('.see-all').addEventListener('click', ()=>showPage('maintenance'));
+}
+
+function maintenancePage(){
+  app.innerHTML = `
+    <section class="page-header maintenance-header">
+      <div class="mini-brand"><img src="assets/euromed-logo.png" alt="EuroMed"></div>
+      <span class="eyebrow purple-text">ESPACE MAINTENANCE</span>
+      <h1>Choisissez votre<br><em>équipement.</em></h1>
+      <p>Accédez directement au formulaire de maintenance correspondant au matériel.</p>
+    </section>
+    <section class="content-section">
+      <div class="tab-scroller" role="tablist" aria-label="Équipements à maintenir">
+        ${MAINTENANCE.map((x,i)=>`<button class="maint-tab ${i===0?'active':''}" data-id="${x.id}" role="tab" type="button">${x.title}</button>`).join('')}
+      </div>
+      <div id="maintenance-panel"></div>
+    </section>
+    <section class="maintenance-info"><span>✓</span><div><b>Formulaires accessibles directement</b><small>Après validation, utilisez le bouton Accueil en bas pour revenir au Hub.</small></div></section>`;
+
+  const panel = app.querySelector('#maintenance-panel');
+  function select(id){
+    const item = MAINTENANCE.find(x=>x.id===id);
+    app.querySelectorAll('.maint-tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id));
+    panel.innerHTML = `<div class="selected-maint ${item.cls}">
+      <div class="selected-icon">${item.icon}</div>
+      <span class="eyebrow">MAINTENANCE</span>
+      <h2>${item.title}</h2><p>${item.subtitle}</p>
+      <a class="big-open" href="${item.url}">Ouvrir la maintenance <b>→</b></a>
+    </div>`;
+  }
+  app.querySelectorAll('.maint-tab').forEach(t=>t.addEventListener('click',()=>select(t.dataset.id)));
+  select('lit');
+}
+
+function setNav(page){
+  navItems.forEach(item=>item.classList.toggle('active', item.dataset.page===page));
+}
+function showPage(page){
+  setNav(page);
+  window.scrollTo({top:0,behavior:'smooth'});
+  page==='maintenance' ? maintenancePage() : home();
+}
+
+navItems.forEach(item=>{
+  if(item.dataset.page) item.addEventListener('click',()=>showPage(item.dataset.page));
+});
+
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-page]');
+  if(btn && btn.classList.contains('see-all')) showPage(btn.dataset.page);
+});
+
+home();
+</script>
+</body>
+</html>
