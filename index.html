@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06152b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EuroMed">
+<title>EuroMed — Hub Technicien</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <main id="app" class="app-content"></main>
+  <nav class="bottom-nav" aria-label="Navigation principale">
+    <button class="nav-item active" data-page="home" type="button"><span class="nav-icon">⌂</span><span>Accueil</span></button>
+    <button class="nav-item" data-page="maintenance" type="button"><span class="nav-icon">⚙</span><span>Maintenance</span></button>
+    <button class="nav-item" data-page="documentation" type="button"><span class="nav-icon">▤</span><span>Documentation</span></button>
+  </nav>
+</div>
+<script>
+const MAINTENANCE = [
+  {id:'lit', title:'Lit médicalisé', short:'Lit médicalisé', subtitle:'Vérifiez, contrôlez et assurez le bon fonctionnement de votre lit médicalisé.', url:'https://hawaryou.github.io/maintenance-lit-medical/', cls:'purple', icon:'🛏️'},
+  {id:'fauteuil', title:'Fauteuil roulant', short:'Fauteuil roulant', subtitle:'Assurez la sécurité et la performance de votre fauteuil roulant.', url:'https://hawaryou.github.io/maintenance-fauteuil-roulant/', cls:'green', icon:'♿'},
+  {id:'matelas', title:'Matelas à air', short:'Matelas à air', subtitle:'Contrôlez le système alternating et son bon fonctionnement.', url:'https://hawaryou.github.io/maintenance-matelas-alternating/', cls:'blue', icon:'🛌'},
+  {id:'leve', title:'Lève-personne', short:'Lève-personne', subtitle:'Contrôlez le matériel de transfert et ses éléments de sécurité.', url:'https://hawaryou.github.io/maintenance-leve-personne/', cls:'orange', icon:'🏥'},
+  {id:'verticalisateur', title:'Verticalisateur', short:'Verticalisateur', subtitle:'Vérifiez, contrôlez et assurez le bon fonctionnement de votre verticalisateur.', url:'https://hawaryou.github.io/maintenance-verticalisateur/', cls:'pink', icon:'🧍'}
+];
+const app=document.getElementById('app');
+const navItems=[...document.querySelectorAll('.nav-item')];
+const logo=()=>`<img class="logo" src="assets/euromed-logo.png" alt="EuroMed">`;
+const arrow=()=>'<span class="arrow">›</span>';
+function setNav(page){navItems.forEach(x=>x.classList.toggle('active',x.dataset.page===page));}
+function showPage(page){setNav(page);window.scrollTo({top:0,behavior:'smooth'}); if(page==='maintenance')maintenancePage(); else if(page==='documentation')documentationPage(); else home();}
+function quickIcon(kind){return kind==='delivery'?'🚚':'📦'}
+function home(){
+ app.innerHTML=`
+ <section class="screen-home">
+   <div class="topbar">
+     <div class="brand-box">${logo()}</div>
+     <div class="status-pill"><span></span> EN LIGNE</div>
+   </div>
+   <div class="hero-card">
+     <div class="hero-glow one"></div><div class="hero-glow two"></div>
+     <div class="hero-copy">
+       <span class="mini-label">HUB TECHNICIEN</span>
+       <h1>Bonjour 👋<br><strong>Prêt pour l'intervention ?</strong></h1>
+       <p>Tous vos outils EuroMed réunis dans une seule application.</p>
+     </div>
+     <div class="hero-mascot"><div class="mascot-ring"></div><img src="assets/chibi-euromed.png" alt="Technicien EuroMed"></div>
+   </div>
+   <div class="section-head"><div><span class="section-kicker">ACCÈS RAPIDE</span><h2>Vos outils</h2></div></div>
+   <div class="quick-grid">
+     <a class="quick-card delivery" href="https://hawaryou.github.io/Bon-de-livraison-euromed/"><div class="quick-art">${quickIcon('delivery')}</div><div><b>Carnet de<br>livraison</b><small>Créer un bon</small></div>${arrow()}</a>
+     <a class="quick-card reprise" href="https://hawaryou.github.io/bon-reprise-euromed/"><div class="quick-art">↩️</div><div><b>Carnet de<br>reprise</b><small>Reprendre du matériel</small></div>${arrow()}</a>
+     <a class="quick-card inventory" href="https://hawaryou.github.io/inventaire-materiel/"><div class="quick-art">${quickIcon('inventory')}</div><div><b>Inventaire<br>matériel</b><small>Gérer le parc</small></div>${arrow()}</a>
+   </div>
+   <div class="section-head maintenance-head"><div><span class="section-kicker">CONTRÔLE & SUIVI</span><h2>Nos maintenances</h2></div><button class="view-all" data-page="maintenance">Voir tout</button></div>
+   <div class="maintenance-scroller">${MAINTENANCE.map((x,i)=>`<button class="maintenance-tile ${x.cls}" data-maint="${x.id}" type="button"><div class="tile-orb">${x.icon}</div><span>${x.title}</span><small>Ouvrir la maintenance</small><i>›</i></button>`).join('')}</div>
+   <div class="ready-banner"><div class="ready-icon">✓</div><div><b>Prêt pour l'intervention</b><span>Sélectionnez simplement l'outil dont vous avez besoin.</span></div></div>
+ </section>`;
+ app.querySelector('.view-all').addEventListener('click',()=>showPage('maintenance'));
+ app.querySelectorAll('[data-maint]').forEach(b=>b.addEventListener('click',()=>{const x=MAINTENANCE.find(m=>m.id===b.dataset.maint);location.href=x.url;}));
+}
+function maintenancePage(){
+ app.innerHTML=`
+ <section class="page-top dark-top">
+   <div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">⚙️ <span>Maintenance</span></div><div class="top-spacer"></div></div>
+   <p>Sélectionnez la maintenance souhaitée.</p>
+ </section>
+ <section class="maintenance-page-section">
+   <div class="tab-scroller" role="tablist">${MAINTENANCE.map((x,i)=>`<button class="maint-tab ${i===0?'active':''}" data-id="${x.id}" role="tab" type="button">${x.short}</button>`).join('')}</div>
+   <div id="maintenance-panel"></div>
+   <div class="dots" id="dots">${MAINTENANCE.map((_,i)=>`<span class="${i===0?'active':''}"></span>`).join('')}</div>
+ </section>`;
+ const panel=app.querySelector('#maintenance-panel');
+ function select(id){const item=MAINTENANCE.find(x=>x.id===id); const idx=MAINTENANCE.indexOf(item); app.querySelectorAll('.maint-tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id)); app.querySelectorAll('.dots span').forEach((d,i)=>d.classList.toggle('active',i===idx)); panel.innerHTML=`<article class="selected-maint ${item.cls}"><div class="selected-art">${item.icon}</div><span class="selected-kicker">MAINTENANCE</span><h2>${item.title}</h2><p>${item.subtitle}</p><a class="big-open" href="${item.url}">Ouvrir la maintenance ${arrow()}</a><div class="direct-link">↗ Lien direct</div></article>`;}
+ app.querySelectorAll('.maint-tab').forEach(t=>t.addEventListener('click',()=>select(t.dataset.id))); app.querySelector('.back-btn').addEventListener('click',()=>showPage('home')); select('lit');
+}
+function documentationPage(){
+ app.innerHTML=`
+ <section class="page-top dark-top doc-top">
+   <div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">📄 <span>Documentation</span></div><div class="top-spacer"></div></div>
+   <p>Accédez à vos documents et notices EuroMed.</p>
+ </section>
+ <section class="documentation-wrap">
+   <div class="doc-card"><div class="doc-art">📄<span>PDF</span></div><span class="selected-kicker">DOCUMENTS EUROMED</span><h2>Envoi PDF EuroMed</h2><p>Accédez à la documentation, aux notices et envoyez vos documents.</p><a class="big-open" href="https://hawaryou.github.io/envoi_pdf_euromed/">Ouvrir la documentation ${arrow()}</a><div class="direct-link">↗ https://hawaryou.github.io/envoi_pdf_euromed/</div></div>
+   <div class="doc-mascot"><div>Ensemble pour<br><strong>votre matériel !</strong></div><img src="assets/chibi-euromed.png" alt="EuroMed"></div>
+ </section>`;
+ app.querySelector('.back-btn').addEventListener('click',()=>showPage('home'));
+}
+navItems.forEach(item=>item.addEventListener('click',()=>showPage(item.dataset.page)));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b&&b.classList.contains('view-all'))showPage(b.dataset.page);});
+home();
+</script>
+</body>
+</html>
