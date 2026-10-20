@@ -18,3 +18,18 @@ html[data-theme="light"] body input,html[data-theme="light"] body select,html[da
 html[data-theme="light"] body button:not(.theme-toggle){background:#e8f4fb!important;color:#111827!important;border-color:#9bbdd0!important}
 html[data-theme="light"] body .theme-toggle{color:#f8fafc!important;background:linear-gradient(135deg,#123b58,#30245c)!important;border-color:#48d8f0!important}
 html[data-theme="light"] body a.hub-menu{color:#fff!important;background:linear-gradient(135deg,#078fc4,#5946df)!important}
+
+
+/* Theme complet du HUB EuroMed */
+html[data-theme="light"]{color-scheme:light;background:#f3f7fb}
+html[data-theme="light"] body{background:linear-gradient(180deg,#eaf5ff,#f7f9fc)!important;color:#172b3a!important}
+html[data-theme="light"] .app-shell{background:#f8fbff!important;box-shadow:0 0 50px #123b5a18!important}
+html[data-theme="light"] .app-content{background:#f8fbff!important;color:#172b3a!important}
+html[data-theme="light"] .app-content .screen-home,
+html[data-theme="light"] .app-content .screen-home *{color:#172b3a}
+html[data-theme="light"] .hero-card,html[data-theme="light"] .feature-card,html[data-theme="light"] .tool-card,html[data-theme="light"] .doc-card,html[data-theme="light"] .content-card,html[data-theme="light"] .search-panel{background:#fff!important;color:#172b3a!important;border-color:#c5d8e8!important}
+html[data-theme="light"] .brand-box,html[data-theme="light"] .status-pill{background:#e6f5ff!important;color:#164e70!important}
+html[data-theme="light"] .bottom-nav{background:#fff!important;border-color:#c5d8e8!important}
+html[data-theme="light"] .nav-item{color:#31556c!important}
+html[data-theme="light"] .nav-item.active{background:#e4f4ff!important;color:#075985!important}
+html[data-theme="light"] .theme-toggle{color:#fff!important;background:linear-gradient(135deg,#123b58,#30245c)!important}
