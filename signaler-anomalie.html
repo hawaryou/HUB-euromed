@@ -13,6 +13,8 @@
 <a class="back" href="https://hawaryou.github.io/HUB-euromed/">‹ Retour au Hub EuroMed</a>
 <header class="hero"><div class="eyebrow">HUB TECHNICIEN · QUALITÉ & SÉCURITÉ</div><h1>⚠️ Signaler une anomalie</h1><p>Décrivez le problème constaté sur un dispositif médical pour préparer une demande d’intervention EuroMed.</p></header>
 <form id="form">
+<div class="notice" id="offlineDraftNotice" role="status" aria-live="polite" style="margin:12px 0">🗂️ Brouillon local activé : les champs sont conservés sur cet appareil. Les photos ne sont pas conservées après fermeture ou rechargement. Hors connexion, l’envoi sera à refaire manuellement au retour du réseau.</div>
+<div class="buttons" style="margin:0 0 14px"><button class="btn secondary" type="button" id="clearLocalDraft">Effacer le brouillon enregistré</button></div>
 <section class="panel"><h2>01 · Dispositif médical</h2>
 <label class="field"><span>Type de dispositif *</span><select id="device" required><option value="">Choisir un dispositif…</option><option>Lit médicalisé</option><option>Fauteuil roulant</option><option>Matelas à air</option><option>Verticalisateur</option><option>Soulève-personne</option><option>Autre</option></select></label>
 <label class="field" id="otherWrap" hidden><span>Préciser le dispositif (si « Autre ») *</span><input id="other" placeholder="Type / marque / modèle"></label>
@@ -128,4 +130,44 @@ $('confirmSend').addEventListener('click',async()=>{
   $('status').style.background='#4b2028';btn.disabled=false;btn.textContent='↻ Réessayer l’envoi';
  }finally{sending=false}
 });
-</script></body></html>
+</script>
+<script>
+/* Brouillon local du signalement. Les fichiers photo restent volontairement hors du stockage local. */
+(function(){
+ const key="euromed-anomalie-draft-v1";
+ const ids=["device","other","serial","client","foyer","technician","description"];
+ const notice=document.getElementById("offlineDraftNotice");
+ let restoring=false;
+ function readFields(){
+   const data={savedAt:new Date().toISOString(),fields:{},foyerToggle:!!document.getElementById("foyerToggle")?.checked};
+   ids.forEach(id=>{const el=document.getElementById(id);if(el)data.fields[id]=el.value;});
+   return data;
+ }
+ function saveDraft(){
+   if(restoring)return;
+   try{localStorage.setItem(key,JSON.stringify(readFields()));if(notice){notice.textContent=navigator.onLine?"🗂️ Brouillon enregistré sur cet appareil. Les photos devront être sélectionnées à nouveau si la page est rechargée.":"📴 Hors connexion : brouillon conservé sur cet appareil. Les photos ne sont pas sauvegardées et l’envoi devra être relancé manuellement quand le réseau revient.";}}
+   catch(e){if(notice)notice.textContent="⚠️ Le navigateur n’a pas pu enregistrer le brouillon. Vérifiez l’espace disponible sur l’appareil.";}
+ }
+ function restoreDraft(){
+   let raw;try{raw=localStorage.getItem(key)}catch(e){return}
+   if(!raw)return;
+   try{
+     const data=JSON.parse(raw);if(!data||!data.fields)return;
+     restoring=true;
+     ids.forEach(id=>{const el=document.getElementById(id);if(el&&typeof data.fields[id]==="string")el.value=data.fields[id];});
+     const toggle=document.getElementById("foyerToggle");if(toggle&&typeof data.foyerToggle==="boolean")toggle.checked=data.foyerToggle;
+     restoring=false;
+     if(notice)notice.textContent="↩️ Brouillon précédent restauré depuis cet appareil. Vérifiez les informations et sélectionnez à nouveau les photos si nécessaire.";
+     if(typeof updateConditionalFields==="function")updateConditionalFields();
+   }catch(e){restoring=false;}
+ }
+ const form=document.getElementById("form");
+ if(form){form.addEventListener("input",saveDraft);form.addEventListener("change",saveDraft);}
+ const clear=document.getElementById("clearLocalDraft");
+ if(clear)clear.addEventListener("click",()=>{try{localStorage.removeItem(key)}catch(e){};if(notice)notice.textContent="Brouillon local effacé. Les champs actuellement affichés n’ont pas été vidés.";});
+ window.addEventListener("offline",saveDraft);
+ window.addEventListener("online",()=>{if(notice)notice.textContent="🌐 Connexion retrouvée. Vérifiez le brouillon, sélectionnez à nouveau les photos puis appuyez sur « Confirmer et envoyer ». L’envoi n’est pas automatique.";});
+ restoreDraft();
+})();
+</script>
+</body></html>
