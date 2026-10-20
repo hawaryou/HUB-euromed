@@ -167,3 +167,6 @@ html[data-theme="light"] .hero-card:after,html[data-theme="light"] .hero-glow{op
 html[data-theme="light"] .mascot-ring{display:none!important}
 html[data-theme="light"] .hero-mascot img{z-index:2!important;mix-blend-mode:multiply!important;filter:drop-shadow(0 10px 10px #163b5420)!important}
 .status-pill{display:none!important}
+
+/* Indicateur de connectivité hors ligne */
+.status-pill.offline{border-color:#b97832;background:#3a2a17;color:#ffe0a3}.status-pill.offline>span:first-child{background:#ffb547;box-shadow:0 0 9px #ffb547}
