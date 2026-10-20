@@ -90,3 +90,31 @@ html[data-theme="light"] .doc-mascot strong{color:#17364b!important}
 html[data-theme="light"] .bottom-nav{background:#e9f7ffed!important;border-color:#b6dce9!important}
 html[data-theme="light"] .nav-item.active{background:linear-gradient(145deg,#d8f2ff,#e8e2ff)!important;color:#17364b!important}
 html[data-theme="light"] .nav-item:not(.active) .nav-icon{background:#d9effa!important;color:#174e70!important;border-color:#b7dce9!important}
+
+
+/* Correctifs HUB clair : texte visible sur les cartes colorées */
+html[data-theme="light"] .quick-card.delivery,html[data-theme="light"] .quick-card.reprise,html[data-theme="light"] .quick-card.inventory,
+html[data-theme="light"] .maintenance-tile,html[data-theme="light"] .selected-maint,html[data-theme="light"] .selected-maint *,
+html[data-theme="light"] .doc-card,html[data-theme="light"] .doc-card *{
+ color:#fff!important;
+}
+html[data-theme="light"] .quick-card.delivery b,html[data-theme="light"] .quick-card.delivery small,html[data-theme="light"] .quick-card.delivery .arrow,
+html[data-theme="light"] .quick-card.reprise b,html[data-theme="light"] .quick-card.reprise small,html[data-theme="light"] .quick-card.reprise .arrow,
+html[data-theme="light"] .quick-card.inventory b,html[data-theme="light"] .quick-card.inventory small,html[data-theme="light"] .quick-card.inventory .arrow,
+html[data-theme="light"] .maintenance-tile span,html[data-theme="light"] .maintenance-tile small,html[data-theme="light"] .maintenance-tile i,
+html[data-theme="light"] .selected-maint h2,html[data-theme="light"] .selected-maint p,html[data-theme="light"] .selected-maint .selected-kicker,html[data-theme="light"] .selected-maint .direct-link,
+html[data-theme="light"] .doc-card h2,html[data-theme="light"] .doc-card p{color:#fff!important}
+html[data-theme="light"] .quick-card .quick-art,html[data-theme="light"] .maintenance-tile .tile-orb,html[data-theme="light"] .selected-maint .selected-art,html[data-theme="light"] .doc-card .doc-art{
+ background-color:#ffffff22!important;color:#fff!important;border-color:#ffffff55!important;
+}
+html[data-theme="light"] .quick-card.anomaly,html[data-theme="light"] .quick-card.anomaly *{color:#182338!important}
+html[data-theme="light"] .hero-card{background:linear-gradient(145deg,#eaf8ff 0%,#d8f2ff 58%,#c8eaff 100%)!important;border-color:#9bd8ed!important}
+html[data-theme="light"] .hero-card:after{z-index:0!important}
+html[data-theme="light"] .hero-glow{z-index:0!important;pointer-events:none}
+html[data-theme="light"] .hero-copy{z-index:2!important}
+html[data-theme="light"] .hero-mascot{z-index:3!important;background:transparent!important}
+html[data-theme="light"] .hero-mascot img{position:relative;z-index:2;background:transparent!important;mix-blend-mode:multiply!important}
+html[data-theme="light"] .mascot-ring{z-index:1!important;right:4px;bottom:-25px;background:radial-gradient(circle,#a7e5ff 0,#ccefff 64%,transparent 68%)!important;border:0!important;box-shadow:none!important;pointer-events:none}
+html[data-theme="light"] .status-pill{display:none!important}
+html[data-theme="light"] .topbar{position:relative;padding-right:0}
+html[data-theme="light"] .theme-toggle{position:absolute!important;top:5px!important;right:0!important;z-index:10050!important}
