@@ -15,6 +15,9 @@
 <form id="form">
 <div class="notice" id="offlineDraftNotice" role="status" aria-live="polite" style="margin:12px 0">🗂️ Brouillon local activé : les champs sont conservés sur cet appareil. Les photos ne sont pas conservées après fermeture ou rechargement. Hors connexion, l’envoi sera à refaire manuellement au retour du réseau.</div>
 <div class="buttons" style="margin:0 0 14px"><button class="btn secondary" type="button" id="clearLocalDraft">Effacer le brouillon enregistré</button></div>
+<section class="panel" id="offlineQueuePanel" aria-live="polite" style="margin-top:0">
+<h2>📤 File d’attente d’envoi</h2><p class="hint" id="offlineQueueSummary">Chargement des signalements conservés sur cet appareil…</p><div id="offlineQueueList"></div>
+</section>
 <section class="panel"><h2>01 · Dispositif médical</h2>
 <label class="field"><span>Type de dispositif *</span><select id="device" required><option value="">Choisir un dispositif…</option><option>Lit médicalisé</option><option>Fauteuil roulant</option><option>Matelas à air</option><option>Verticalisateur</option><option>Soulève-personne</option><option>Autre</option></select></label>
 <label class="field" id="otherWrap" hidden><span>Préciser le dispositif (si « Autre ») *</span><input id="other" placeholder="Type / marque / modèle"></label>
@@ -111,25 +114,56 @@ $('form').addEventListener('submit',e=>{
  $('emailPreview').scrollIntoView({behavior:'smooth',block:'start'});
 });
 $('editReport').addEventListener('click',()=>{$('emailPreview').style.display='none';$('form').scrollIntoView({behavior:'smooth',block:'start'})});
+const QUEUE_DB='euromed-anomalies-db', QUEUE_STORE='outbox';
+function openQueueDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(QUEUE_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(QUEUE_STORE))db.createObjectStore(QUEUE_STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function queuePut(item){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readwrite');tx.objectStore(QUEUE_STORE).put(item);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}
+async function queueAll(){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readonly'),req=tx.objectStore(QUEUE_STORE).getAll();req.onsuccess=()=>{db.close();resolve(req.result||[])};req.onerror=()=>{db.close();reject(req.error)}})}
+async function queueDelete(id){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readwrite');tx.objectStore(QUEUE_STORE).delete(id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}
+async function queueRefresh(){
+ const list=$('offlineQueueList'),summary=$('offlineQueueSummary');if(!list||!summary)return;
+ try{const items=await queueAll();summary.textContent=items.length?items.length+' signalement(s) conservé(s) sur cet appareil. Les éléments « transmis à vérifier » ne sont pas renvoyés automatiquement pour éviter les doublons.':'Aucun signalement en attente.';
+ list.innerHTML='';
+ items.forEach(item=>{const row=document.createElement('div');row.style.cssText='border:1px solid #315477;border-radius:12px;padding:12px;margin:8px 0;background:#07182d';
+ const title=document.createElement('strong');title.textContent=(item.payload.dispositif||'Dispositif')+' — Série '+(item.payload.numeroSerie||'non renseignée');
+ const info=document.createElement('p');info.className='hint';info.textContent=(item.state==='sent-unconfirmed'?'Requête transmise, livraison à vérifier dans la boîte mail.':item.state==='sending'?'Transmission en cours…':'En attente d’envoi')+' · '+new Date(item.createdAt).toLocaleString('fr-FR');
+ row.append(title,info);
+ if(item.state==='sent-unconfirmed'){const b=document.createElement('button');b.type='button';b.className='btn secondary';b.textContent='✓ J’ai vérifié la réception — retirer de la file';b.addEventListener('click',async()=>{if(confirm('Retirer ce signalement de la file locale ? Vérifie d’abord que le courriel est bien reçu.')){await queueDelete(item.id);queueRefresh()}});row.append(b)}
+ else {const b=document.createElement('button');b.type='button';b.className='btn';b.textContent='↻ Réessayer l’envoi';b.addEventListener('click',()=>sendQueued(item.id));row.append(b)}
+ list.append(row)});
+ }catch(e){summary.textContent='Le stockage de la file d’attente est indisponible dans ce navigateur. Ne ferme pas la page et réessaie après reconnexion.'}
+}
+async function sendQueued(id){
+ if(!navigator.onLine){$('status').style.display='block';$('status').textContent='Toujours hors connexion : le signalement reste dans la file locale.';return}
+ const items=await queueAll(),item=items.find(x=>x.id===id);if(!item||item.state==='sent-unconfirmed'||sending)return;
+ if(!APPS_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){alert('URL Apps Script incorrecte.');return}
+ sending=true;item.state='sending';await queuePut(item);queueRefresh();
+ try{
+   await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(item.payload)});
+   item.state='sent-unconfirmed';item.lastAttemptAt=new Date().toISOString();await queuePut(item);
+   $('status').style.display='block';$('status').style.background='#173b2b';$('status').textContent='Requête transmise. Le navigateur ne peut pas confirmer la livraison du courriel (endpoint no-cors). Vérifie la boîte de réception et les indésirables avant de retirer cet élément de la file.';
+ }catch(err){item.state='pending';item.lastError=String(err&&err.message||err);await queuePut(item);$('status').style.display='block';$('status').style.background='#4b2028';$('status').textContent='Échec réseau : le signalement est conservé dans la file et pourra être renvoyé.'}
+ finally{sending=false;queueRefresh()}
+}
 $('confirmSend').addEventListener('click',async()=>{
  if(sending||!pendingData)return;
  if(!APPS_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){alert('URL Apps Script incorrecte.');return}
- sending=true;
- const btn=$('confirmSend');btn.disabled=true;btn.textContent='⏳ Préparation de l’envoi…';
- $('status').style.display='block';$('status').textContent='Envoi en cours… Ne ferme pas cette page.';
+ sending=true;const btn=$('confirmSend');btn.disabled=true;btn.textContent='⏳ Préparation du signalement…';
  try{
   const photos=await Promise.all(pendingData.photos.map(fileToBase64));
   const payload={...pendingData,photos};
-  const response=await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-  // In no-cors mode the response is opaque; it cannot prove that Apps Script sent the email.
-  $('status').textContent='La requête a été transmise à Google Apps Script, mais le navigateur ne peut pas confirmer la livraison du courriel. Vérifie la boîte de réception et le dossier indésirables de valentineuromed@gmail.com. Si aucun mail n’arrive, consulte « Exécutions » dans Apps Script : le déploiement doit contenir le code.gs fourni.';
-  $('status').style.background='#173b2b';$('status').style.display='block';
-  btn.textContent='✓ Requête transmise';
+  const item={id:(crypto.randomUUID?crypto.randomUUID():'anomaly-'+Date.now()+'-'+Math.random().toString(36).slice(2)),createdAt:new Date().toISOString(),state:'pending',payload};
+  if(!navigator.onLine){
+    await queuePut(item);$('status').style.display='block';$('status').style.background='#3a2c12';$('status').textContent='📴 Signalement enregistré dans la file locale avec ses photos. Il sera proposé à l’envoi lorsque la connexion reviendra. Garde cet appareil et ce navigateur : la file est locale.';
+    btn.textContent='✓ Enregistré hors connexion';await queueRefresh();return;
+  }
+  await queuePut(item);btn.textContent='✓ Mis en file d’envoi';await queueRefresh();await sendQueued(item.id);
  }catch(err){
-  $('status').textContent='Échec de la transmission : '+(err&&err.message?err.message:'erreur réseau')+'. Aucun formulaire n’a été effacé. Réessaie ou vérifie la connexion.';
-  $('status').style.background='#4b2028';btn.disabled=false;btn.textContent='↻ Réessayer l’envoi';
- }finally{sending=false}
+  $('status').style.display='block';$('status').style.background='#4b2028';$('status').textContent='Impossible d’enregistrer le signalement localement : '+String(err&&err.message||err)+'. Ne ferme pas la page ; réessaie avec moins de photos.';
+  btn.disabled=false;btn.textContent='↻ Réessayer';
+ }finally{sending=false;queueRefresh()}
 });
+window.addEventListener('online',async()=>{try{const items=await queueAll();for(const item of items){if(item.state==='pending')await sendQueued(item.id)}}catch(e){}});
+queueRefresh();
 </script>
 <script>
 /* Brouillon local du signalement. Les fichiers photo restent volontairement hors du stockage local. */
