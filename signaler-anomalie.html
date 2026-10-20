@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#06152b"><title>EuroMed — Signaler une anomalie</title>
 <style>
 :root{color-scheme:dark;--bg:#06152b;--panel:#102544;--line:#24476e;--cyan:#55d9ff;--muted:#a9bdd6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#173a68 0,transparent 35%),var(--bg);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f5f8ff;padding:18px 14px 40px}.wrap{max-width:760px;margin:auto}.back{display:inline-flex;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#1687df,#5148d9);color:white;text-decoration:none;font-weight:800;box-shadow:0 6px 18px #0005}.hero{padding:22px 4px 12px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:2px}h1{font-size:clamp(28px,6vw,40px);line-height:1.08;margin:8px 0}p{color:var(--muted);line-height:1.5}.panel{background:linear-gradient(145deg,#112b4c,#0b1c35);border:1px solid var(--line);border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 14px 34px #0003}.panel h2{font-size:16px;margin:0 0 16px}.field{display:block;margin:14px 0}.field>span{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:#dbeaff}input,select,textarea{width:100%;min-height:48px;padding:12px;border:1px solid #315477;border-radius:12px;background:#07182d;color:#fff;font:inherit}textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 14px;min-height:46px;background:#1c5c9e;color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#263b56}.btn.submit{width:100%;background:linear-gradient(120deg,#00a9dc,#5865e9);font-size:16px;margin-top:8px}.hint{font-size:12px;color:var(--muted)}#preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}#preview img{width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}#reader{width:100%;overflow:hidden;border-radius:12px;margin-top:12px}#scanner{display:none}#status{padding:12px;border-radius:12px;margin-top:12px;display:none;white-space:pre-wrap}.notice{background:#3a2c12;border:1px solid #88672d;color:#ffe8a6;padding:12px;border-radius:12px;font-size:13px}@media(max-width:520px){.row{grid-template-columns:1fr}.panel{padding:15px}}
-</style>
+[hidden]{display:none!important}#emailPreview{display:none}#emailPreview pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;color:#eaf4ff;background:#07182d;border:1px solid #315477;border-radius:12px;padding:14px}#emailPreview .preview-actions{display:flex;gap:10px;flex-wrap:wrap}#emailPreview .preview-actions .btn{flex:1}\n</style>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head><body><div class="wrap">
 <a class="back" href="https://hawaryou.github.io/HUB-euromed/">‹ Retour au Hub EuroMed</a>
@@ -28,16 +28,100 @@
 </section>
 <div class="notice">Avant l’envoi, vérifiez le numéro de série et la description. Si le dispositif présente un danger, appliquez les consignes de sécurité internes et mettez-le hors service si nécessaire.</div>
 <button class="btn submit" type="submit">✉️ Envoyer la demande d’intervention</button>
-<div id="status" role="status" aria-live="polite"></div>
+<div id="status" role="status" aria-live="polite"></div>\n<section class="panel" id="emailPreview" aria-live="polite"><h2>Vérifier le courriel avant envoi</h2><p>Voici le contenu qui sera envoyé à <strong>valentineuromed@gmail.com</strong>.</p><pre id="emailPreviewText"></pre><div id="emailPreviewPhotos" class="hint"></div><div class="preview-actions"><button class="btn secondary" type="button" id="editReport">← Modifier le signalement</button><button class="btn submit" type="button" id="confirmSend">✉️ Confirmer et envoyer</button></div></section>
 </form>
 </div>
 <script>
-const $=id=>document.getElementById(id);let scanner=null;\nfunction updateConditionalFields(){const isOther=$('device').value==='Autre';$('otherWrap').hidden=!isOther;$('other').required=isOther;if(!isOther)$('other').value='';const hasFoyer=$('foyerToggle').checked;$('foyerWrap').hidden=!hasFoyer;$('foyer').required=hasFoyer;if(!hasFoyer)$('foyer').value='';}\n$('device').addEventListener('change',updateConditionalFields);$('foyerToggle').addEventListener('change',updateConditionalFields);updateConditionalFields();
-$('qrStart').addEventListener('click',async()=>{if(!window.Html5Qrcode){alert('Le module de scan ne s’est pas chargé. Saisissez le numéro manuellement.');return}try{$('scanner').style.display='block';$('qrStart').hidden=true;$('qrStop').hidden=false;scanner=new Html5Qrcode('reader');await scanner.start({facingMode:'environment'},{fps:12,qrbox:{width:240,height:180},formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.DATA_MATRIX]},value=>{$('serial').value=value;stopScan();});}catch(e){alert('Impossible de démarrer la caméra. Vérifiez les autorisations du navigateur ou saisissez le numéro manuellement.');stopScan()}});
+const $=id=>document.getElementById(id);
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwKfbWNiybCXVGrYc-j4OHJ_qKnVUr6rJHS-o0la_XQzDSXt8j_hacWanbTxEbBQUsbFQ/exec';
+let scanner=null, pendingData=null, sending=false;
+function updateConditionalFields(){
+  const isOther=$('device').value==='Autre';
+  $('otherWrap').hidden=!isOther;
+  $('other').required=isOther;
+  if(!isOther)$('other').value='';
+  const hasFoyer=$('foyerToggle').checked;
+  $('foyerWrap').hidden=!hasFoyer;
+  $('foyer').required=hasFoyer;
+  if(!hasFoyer)$('foyer').value='';
+}
+$('device').addEventListener('change',updateConditionalFields);
+$('foyerToggle').addEventListener('change',updateConditionalFields);
+updateConditionalFields();
+
+$('qrStart').addEventListener('click',async()=>{
+  if(!window.Html5Qrcode){alert('Le module de scan ne s’est pas chargé. Saisissez le numéro manuellement.');return}
+  try{
+    $('scanner').style.display='block';$('qrStart').hidden=true;$('qrStop').hidden=false;
+    scanner=new Html5Qrcode('reader');
+    await scanner.start({facingMode:'environment'},{fps:12,qrbox:{width:240,height:180},formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.DATA_MATRIX]},value=>{$('serial').value=value;stopScan()});
+  }catch(e){alert('Impossible de démarrer la caméra. Vérifiez les autorisations du navigateur ou saisissez le numéro manuellement.');stopScan()}
+});
 async function stopScan(){if(scanner){try{await scanner.stop();scanner.clear()}catch(e){}scanner=null}$('scanner').style.display='none';$('qrStart').hidden=false;$('qrStop').hidden=true}
 $('qrStop').addEventListener('click',stopScan);
-$('photos').addEventListener('change',()=>{const files=[...$('photos').files];$('preview').innerHTML='';if(files.length>5){alert('Sélectionnez au maximum 5 photos.');$('photos').value='';return}files.forEach(f=>{if(!f.type.startsWith('image/'))return;const img=document.createElement('img');img.alt=f.name;img.src=URL.createObjectURL(f);$('preview').append(img)})});
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwKfbWNiybCXVGrYc-j4OHJ_qKnVUr6rJHS-o0la_XQzDSXt8j_hacWanbTxEbBQUsbFQ/exec';
+
+$('photos').addEventListener('change',()=>{
+  const files=[...$('photos').files];$('preview').innerHTML='';
+  if(files.length>5){alert('Sélectionnez au maximum 5 photos.');$('photos').value='';return}
+  files.forEach(f=>{if(!f.type.startsWith('image/'))return;const img=document.createElement('img');img.alt=f.name;img.src=URL.createObjectURL(f);$('preview').append(img)})
+});
 function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({nom:file.name,type:file.type,base64:String(reader.result).split(',')[1]});reader.onerror=reject;reader.readAsDataURL(file)})}
-$('form').addEventListener('submit',async e=>{e.preventDefault();const files=[...$('photos').files];if(files.length>5){alert('Sélectionnez au maximum 5 photos.');return}if(files.some(f=>f.size>4*1024*1024)){alert('Chaque photo doit faire 4 Mo maximum.');return}if(APPS_SCRIPT_URL.includes('COLLER_ICI')){$('status').style.display='block';$('status').textContent='Le formulaire est prêt, mais l’adresse du Web App Google Apps Script n’a pas encore été renseignée. Aucune demande n’a été envoyée.';return}const button=$('form').querySelector('[type=submit]');button.disabled=true;button.textContent='⏳ Envoi en cours…';$('status').style.display='block';$('status').textContent='Préparation du signalement…';try{const photos=await Promise.all(files.map(fileToBase64));const data={dispositif:$('device').value,autre:$('other').value,numeroSerie:$('serial').value,client:$('client').value,foyer:$('foyerToggle').checked?$('foyer').value:'',technicien:$('technician').value,description:$('description').value,dateConstat:new Date().toLocaleString('fr-FR'),photos};await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)});$('status').textContent='Demande transmise au script. Le navigateur ne permet pas de confirmer la réception du mail : vérifiez la boîte de réception EuroMed lors du premier essai.';$('form').reset();$('preview').innerHTML='';}catch(err){$('status').textContent='Impossible de transmettre la demande. Vérifiez la connexion et l’URL du script Google Apps Script.';}finally{button.disabled=false;button.textContent='✉️ Envoyer la demande d’intervention';}});
+function buildReport(){
+ return {
+  dispositif:$('device').value,
+  autre:$('device').value==='Autre'?$('other').value.trim():'',
+  numeroSerie:$('serial').value.trim(),
+  client:$('client').value.trim(),
+  foyer:$('foyerToggle').checked?$('foyer').value.trim():'',
+  technicien:$('technician').value.trim(),
+  description:$('description').value.trim(),
+  dateConstat:new Date().toLocaleString('fr-FR'),
+  destinataire:'valentineuromed@gmail.com',
+  photos:[...$('photos').files]
+ };
+}
+function reportText(d){
+ return 'À : '+d.destinataire+'\nObjet : Signalement d’anomalie — '+d.dispositif+' — Série '+d.numeroSerie+'\n\n'+
+ 'Date du constat : '+d.dateConstat+'\nDispositif : '+d.dispositif+(d.autre?' — '+d.autre:'')+
+ '\nNuméro de série : '+d.numeroSerie+'\nClient / établissement : '+d.client+
+ (d.foyer?'\nFoyer : '+d.foyer:'')+'\nTechnicien : '+d.technicien+
+ '\n\nDescription de l’anomalie :\n'+d.description+
+ '\n\nPhotos jointes : '+(d.photos.length?d.photos.map(f=>f.name).join(', '):'Aucune');
+}
+$('form').addEventListener('submit',e=>{
+ e.preventDefault();
+ updateConditionalFields();
+ if(!$('form').reportValidity())return;
+ const files=[...$('photos').files];
+ if(files.length>5){alert('Sélectionnez au maximum 5 photos.');return}
+ if(files.some(f=>f.size>4*1024*1024)){alert('Chaque photo doit faire 4 Mo maximum.');return}
+ const total=files.reduce((sum,f)=>sum+f.size,0);
+ if(total>8*1024*1024){alert('Le total des photos ne doit pas dépasser 8 Mo.');return}
+ pendingData=buildReport();
+ $('emailPreviewText').textContent=reportText(pendingData);
+ $('emailPreviewPhotos').textContent=files.length?'Pièces jointes : '+files.length+' photo(s), '+(total/1024/1024).toFixed(2)+' Mo au total.':'Aucune photo jointe.';
+ $('emailPreview').style.display='block';
+ $('status').style.display='none';
+ $('emailPreview').scrollIntoView({behavior:'smooth',block:'start'});
+});
+$('editReport').addEventListener('click',()=>{$('emailPreview').style.display='none';$('form').scrollIntoView({behavior:'smooth',block:'start'})});
+$('confirmSend').addEventListener('click',async()=>{
+ if(sending||!pendingData)return;
+ if(!APPS_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){alert('URL Apps Script incorrecte.');return}
+ sending=true;
+ const btn=$('confirmSend');btn.disabled=true;btn.textContent='⏳ Préparation de l’envoi…';
+ $('status').style.display='block';$('status').textContent='Envoi en cours… Ne ferme pas cette page.';
+ try{
+  const photos=await Promise.all(pendingData.photos.map(fileToBase64));
+  const payload={...pendingData,photos};
+  const response=await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+  // In no-cors mode the response is opaque; it cannot prove that Apps Script sent the email.
+  $('status').textContent='La requête a été transmise à Google Apps Script, mais le navigateur ne peut pas confirmer la livraison du courriel. Vérifie la boîte de réception et le dossier indésirables de valentineuromed@gmail.com. Si aucun mail n’arrive, consulte « Exécutions » dans Apps Script : le déploiement doit contenir le code.gs fourni.';
+  $('status').style.background='#173b2b';$('status').style.display='block';
+  btn.textContent='✓ Requête transmise';
+ }catch(err){
+  $('status').textContent='Échec de la transmission : '+(err&&err.message?err.message:'erreur réseau')+'. Aucun formulaire n’a été effacé. Réessaie ou vérifie la connexion.';
+  $('status').style.background='#4b2028';btn.disabled=false;btn.textContent='↻ Réessayer l’envoi';
+ }finally{sending=false}
+});
 </script></body></html>
