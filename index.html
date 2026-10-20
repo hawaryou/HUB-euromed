@@ -56,6 +56,7 @@ function home(){
      <a class="quick-card delivery" href="https://hawaryou.github.io/Bon-de-livraison-euromed/"><div class="quick-art">${quickIcon('delivery')}</div><div><b>Carnet de<br>livraison</b><small>Créer un bon</small></div>${arrow()}</a>
      <a class="quick-card reprise" href="https://hawaryou.github.io/bon-reprise-euromed/"><div class="quick-art">↩️</div><div><b>Carnet de<br>reprise</b><small>Reprendre du matériel</small></div>${arrow()}</a>
      <a class="quick-card inventory" href="https://hawaryou.github.io/inventaire-materiel/"><div class="quick-art">${quickIcon('inventory')}</div><div><b>Inventaire<br>matériel</b><small>Gérer le parc</small></div>${arrow()}</a>
+     <a class="quick-card anomaly" href="signaler-anomalie.html"><div class="quick-art">⚠️</div><div><b>Signaler une<br>anomalie</b><small>Demander une intervention</small></div>${arrow()}</a>
    </div>
    <div class="section-head maintenance-head"><div><span class="section-kicker">CONTRÔLE & SUIVI</span><h2>Nos maintenances</h2></div><button class="view-all" data-page="maintenance">Voir tout</button></div>
    <div class="maintenance-scroller">${MAINTENANCE.map((x,i)=>`<button class="maintenance-tile ${x.cls}" data-maint="${x.id}" type="button"><div class="tile-orb">${x.icon}</div><span>${x.title}</span><small>Ouvrir la maintenance</small><i>›</i></button>`).join('')}</div>
