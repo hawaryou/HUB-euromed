@@ -118,3 +118,52 @@ html[data-theme="light"] .mascot-ring{z-index:1!important;right:4px;bottom:-25px
 html[data-theme="light"] .status-pill{display:none!important}
 html[data-theme="light"] .topbar{position:relative;padding-right:0}
 html[data-theme="light"] .theme-toggle{position:absolute!important;top:5px!important;right:0!important;z-index:10050!important}
+
+
+/* Definitive HUB light-mode cleanup: no white text badges inside colored cards */
+html[data-theme="light"] .quick-card,
+html[data-theme="light"] .quick-card *,
+html[data-theme="light"] .maintenance-tile,
+html[data-theme="light"] .maintenance-tile *,
+html[data-theme="light"] .selected-maint,
+html[data-theme="light"] .selected-maint *,
+html[data-theme="light"] .doc-card,
+html[data-theme="light"] .doc-card * {
+  background-color: transparent !important;
+  background-image: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+html[data-theme="light"] .quick-card.delivery {background:linear-gradient(145deg,#ff6b1d,#ff3c27 62%,#b61d43)!important}
+html[data-theme="light"] .quick-card.reprise {background:linear-gradient(145deg,#ff4fa3,#e51e73 62%,#9b145f)!important}
+html[data-theme="light"] .quick-card.inventory {background:linear-gradient(145deg,#168fff,#0860d7 62%,#123cbd)!important}
+html[data-theme="light"] .quick-card.anomaly {background:linear-gradient(135deg,#ffe45c,#ffb300 62%,#f28c00)!important}
+html[data-theme="light"] .quick-card.delivery *,html[data-theme="light"] .quick-card.reprise *,html[data-theme="light"] .quick-card.inventory * {color:#fff!important}
+html[data-theme="light"] .quick-card.anomaly * {color:#182338!important}
+html[data-theme="light"] .quick-card .quick-art {background:#ffffff25!important;border:1px solid #ffffff55!important;box-shadow:none!important}
+html[data-theme="light"] .quick-card.anomaly .quick-art {background:#ffffff45!important;border-color:#fff5c2!important}
+html[data-theme="light"] .maintenance-tile {box-shadow:0 14px 25px #183a5525!important}
+html[data-theme="light"] .maintenance-tile.purple{background:linear-gradient(145deg,#9a54ff,#5a28e9 68%,#301f9d)!important}
+html[data-theme="light"] .maintenance-tile.green{background:linear-gradient(145deg,#63ec58,#14bf68 67%,#087d62)!important}
+html[data-theme="light"] .maintenance-tile.blue{background:linear-gradient(145deg,#28b7ff,#1873ed 65%,#1d43bc)!important}
+html[data-theme="light"] .maintenance-tile.orange{background:linear-gradient(145deg,#ffbd22,#ff7c1f 62%,#ef3f24)!important}
+html[data-theme="light"] .maintenance-tile.pink{background:linear-gradient(145deg,#ff4cac,#ee1b86 65%,#b31c92)!important}
+html[data-theme="light"] .maintenance-tile span,html[data-theme="light"] .maintenance-tile small,html[data-theme="light"] .maintenance-tile i{color:#fff!important;background:transparent!important}
+html[data-theme="light"] .maintenance-tile .tile-orb{background:#06182d45!important;border:1px solid #ffffff55!important}
+html[data-theme="light"] .selected-maint.purple{background:linear-gradient(145deg,#a65cff,#4e21d9 65%,#21167f)!important}
+html[data-theme="light"] .selected-maint.green{background:linear-gradient(145deg,#63ee58,#13b965 65%,#067657)!important}
+html[data-theme="light"] .selected-maint.blue{background:linear-gradient(145deg,#24bfff,#176eea 65%,#2039a8)!important}
+html[data-theme="light"] .selected-maint.orange{background:linear-gradient(145deg,#ffc62b,#ff711c 64%,#e52d2d)!important}
+html[data-theme="light"] .selected-maint.pink{background:linear-gradient(145deg,#ff55ae,#eb208a 64%,#9e1b90)!important}
+html[data-theme="light"] .selected-maint h2,html[data-theme="light"] .selected-maint p,html[data-theme="light"] .selected-maint .selected-kicker,html[data-theme="light"] .selected-maint .direct-link{color:#fff!important;background:transparent!important}
+html[data-theme="light"] .selected-maint .selected-art{background:#ffffff22!important;border:1px solid #ffffff55!important}
+html[data-theme="light"] .doc-card{background:linear-gradient(145deg,#1e55d9,#123aab 68%,#11245f)!important}
+html[data-theme="light"] .doc-card h2,html[data-theme="light"] .doc-card p,html[data-theme="light"] .doc-card *{color:#fff!important;background-color:transparent!important}
+html[data-theme="light"] .doc-card .doc-art{background:#ffffff16!important;border:1px solid #ffffff32!important}
+html[data-theme="light"] .hero-card{background:linear-gradient(145deg,#eaf8ff 0%,#d8f2ff 58%,#c8eaff 100%)!important;border:0!important;box-shadow:none!important;outline:0!important}
+html[data-theme="light"] .hero-copy,html[data-theme="light"] .hero-copy *{background:transparent!important;box-shadow:none!important}
+html[data-theme="light"] .hero-copy h1,html[data-theme="light"] .hero-copy p{background:transparent!important}
+html[data-theme="light"] .hero-card:after,html[data-theme="light"] .hero-glow{opacity:.18!important;pointer-events:none!important}
+html[data-theme="light"] .mascot-ring{display:none!important}
+html[data-theme="light"] .hero-mascot img{z-index:2!important;mix-blend-mode:multiply!important;filter:drop-shadow(0 10px 10px #163b5420)!important}
+.status-pill{display:none!important}
