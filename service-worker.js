@@ -1,6 +1,11 @@
 /* EuroMed HUB — cache hors connexion v1 */
 const CACHE_NAME = "euromed-hub-offline-v1";
 const BASE = self.registration.scope;
+const REMOTE_FILES = [
+  "https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js",
+  "https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.23/dist/main.js",
+  "https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"
+];
 const CORE_FILES = [
   BASE,
   BASE + "index.html",
@@ -20,6 +25,10 @@ self.addEventListener("install", event => {
         console.warn("Ressource hors ligne non mise en cache :", url);
       }
     }
+    for (const url of REMOTE_FILES) {
+      try { const response = await fetch(url, { mode: "cors" }); if (response.ok) await cache.put(url, response.clone()); }
+      catch (error) { console.warn("Bibliothèque de scan non mise en cache :", url); }
+    }
     await self.skipWaiting();
   })());
 });
@@ -35,7 +44,9 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const request = event.request;
   const url = new URL(request.url);
-  if (request.method !== "GET" || url.origin !== self.location.origin || !url.href.startsWith(BASE)) return;
+  const local = url.origin === self.location.origin && url.href.startsWith(BASE);
+  const remote = REMOTE_FILES.includes(url.href);
+  if (request.method !== "GET" || (!local && !remote)) return;
 
   if (request.mode === "navigate") {
     event.respondWith((async () => {
