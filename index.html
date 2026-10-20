@@ -49,7 +49,7 @@ function home(){
  <section class="screen-home">
    <div class="topbar">
      <div class="brand-box">${logo()}</div>
-     <div class="status-pill"><span></span> EN LIGNE</div>
+     <div class="status-pill" id="connectivityStatus" role="status" aria-live="polite"><span></span><span id="connectivityLabel">Connexion…</span></div>
    </div>
    <div class="hero-card">
      <div class="hero-glow one"></div><div class="hero-glow two"></div>
@@ -104,6 +104,13 @@ function documentationPage(){
 navItems.forEach(item=>item.addEventListener('click',()=>showPage(item.dataset.page)));
 document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b&&b.classList.contains('view-all'))showPage(b.dataset.page);});
 home();
+</script>
+<script>
+(function(){
+ function update(){var pill=document.getElementById("connectivityStatus"),label=document.getElementById("connectivityLabel");if(!pill||!label)return;var online=navigator.onLine;label.textContent=online?"EN LIGNE":"HORS CONNEXION";pill.classList.toggle("offline",!online);pill.setAttribute("aria-label",online?"Connexion disponible":"Mode hors connexion");}
+ window.addEventListener("online",update);window.addEventListener("offline",update);update();
+ if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("./service-worker.js").catch(function(e){console.warn("Mode hors connexion indisponible",e);});}
+})();
 </script>
 </body>
 </html>
