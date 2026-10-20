@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06152b"><title>EuroMed — Signaler une anomalie</title>
+<style>
+:root{color-scheme:dark;--bg:#06152b;--panel:#102544;--line:#24476e;--cyan:#55d9ff;--muted:#a9bdd6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#173a68 0,transparent 35%),var(--bg);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f5f8ff;padding:18px 14px 40px}.wrap{max-width:760px;margin:auto}.back{display:inline-flex;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#1687df,#5148d9);color:white;text-decoration:none;font-weight:800;box-shadow:0 6px 18px #0005}.hero{padding:22px 4px 12px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:2px}h1{font-size:clamp(28px,6vw,40px);line-height:1.08;margin:8px 0}p{color:var(--muted);line-height:1.5}.panel{background:linear-gradient(145deg,#112b4c,#0b1c35);border:1px solid var(--line);border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 14px 34px #0003}.panel h2{font-size:16px;margin:0 0 16px}.field{display:block;margin:14px 0}.field>span{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:#dbeaff}input,select,textarea{width:100%;min-height:48px;padding:12px;border:1px solid #315477;border-radius:12px;background:#07182d;color:#fff;font:inherit}textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 14px;min-height:46px;background:#1c5c9e;color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#263b56}.btn.submit{width:100%;background:linear-gradient(120deg,#00a9dc,#5865e9);font-size:16px;margin-top:8px}.hint{font-size:12px;color:var(--muted)}#preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}#preview img{width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}#reader{width:100%;overflow:hidden;border-radius:12px;margin-top:12px}#scanner{display:none}#status{padding:12px;border-radius:12px;margin-top:12px;display:none;white-space:pre-wrap}.notice{background:#3a2c12;border:1px solid #88672d;color:#ffe8a6;padding:12px;border-radius:12px;font-size:13px}@media(max-width:520px){.row{grid-template-columns:1fr}.panel{padding:15px}}
+</style>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head><body><div class="wrap">
+<a class="back" href="https://hawaryou.github.io/HUB-euromed/">‹ Retour au Hub EuroMed</a>
+<header class="hero"><div class="eyebrow">HUB TECHNICIEN · QUALITÉ & SÉCURITÉ</div><h1>⚠️ Signaler une anomalie</h1><p>Décrivez le problème constaté sur un dispositif médical pour préparer une demande d’intervention EuroMed.</p></header>
+<form id="form">
+<section class="panel"><h2>01 · Dispositif médical</h2>
+<label class="field"><span>Type de dispositif *</span><select id="device" required><option value="">Choisir un dispositif…</option><option>Lit médicalisé</option><option>Fauteuil roulant</option><option>Matelas à air</option><option>Verticalisateur</option><option>Soulève-personne</option><option>Autre</option></select></label>
+<label class="field"><span>Préciser le dispositif (si « Autre »)</span><input id="other" placeholder="Type / marque / modèle"></label>
+<label class="field"><span>Numéro de série *</span><input id="serial" required autocomplete="off" placeholder="Saisir ou scanner le code"></label>
+<div class="buttons"><button class="btn" type="button" id="qrStart">📷 Scanner QR / code-barres</button><button class="btn secondary" type="button" id="qrStop" hidden>Fermer le scanner</button></div><div id="scanner"><div id="reader"></div></div><p class="hint">Autorisez l’accès à la caméra. Si le scan ne démarre pas, saisissez le numéro manuellement.</p>
+</section>
+<section class="panel"><h2>02 · Client & localisation</h2>
+<label class="field"><span>Nom du client / établissement *</span><input id="client" required autocomplete="organization" placeholder="Nom du client"></label>
+<label class="field"><span>Foyer (facultatif)</span><input id="foyer" placeholder="Nom du foyer, si applicable"></label>
+</section>
+<section class="panel"><h2>03 · Constat de l’anomalie</h2>
+<label class="field"><span>Technicien ayant fait le constat *</span><input id="technician" required placeholder="Nom et prénom du technicien"></label>
+<label class="field"><span>Description de l’anomalie *</span><textarea id="description" required placeholder="Décrivez le défaut, les circonstances et les éventuels risques…"></textarea></label>
+<label class="field"><span>Photos (facultatif, jusqu’à 5)</span><input id="photos" type="file" accept="image/*" capture="environment" multiple><div class="hint">Vous pouvez prendre une photo avec le téléphone ou joindre des images existantes.</div><div id="preview"></div></label>
+</section>
+<div class="notice">Avant l’envoi, vérifiez le numéro de série et la description. Si le dispositif présente un danger, appliquez les consignes de sécurité internes et mettez-le hors service si nécessaire.</div>
+<button class="btn submit" type="submit">✉️ Préparer le signalement</button>
+<div id="status" role="status" aria-live="polite"></div>
+</form>
+</div>
+<script>
+const $=id=>document.getElementById(id);let scanner=null;
+$('qrStart').addEventListener('click',async()=>{if(!window.Html5Qrcode){alert('Le module de scan ne s’est pas chargé. Saisissez le numéro manuellement.');return}try{$('scanner').style.display='block';$('qrStart').hidden=true;$('qrStop').hidden=false;scanner=new Html5Qrcode('reader');await scanner.start({facingMode:'environment'},{fps:12,qrbox:{width:240,height:180},formatsToSupport:[Html5QrcodeSupportedFormats.QR_CODE,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.DATA_MATRIX]},value=>{$('serial').value=value;stopScan();});}catch(e){alert('Impossible de démarrer la caméra. Vérifiez les autorisations du navigateur ou saisissez le numéro manuellement.');stopScan()}});
+async function stopScan(){if(scanner){try{await scanner.stop();scanner.clear()}catch(e){}scanner=null}$('scanner').style.display='none';$('qrStart').hidden=false;$('qrStop').hidden=true}
+$('qrStop').addEventListener('click',stopScan);
+$('photos').addEventListener('change',()=>{const files=[...$('photos').files];$('preview').innerHTML='';if(files.length>5){alert('Sélectionnez au maximum 5 photos.');$('photos').value='';return}files.forEach(f=>{if(!f.type.startsWith('image/'))return;const img=document.createElement('img');img.alt=f.name;img.src=URL.createObjectURL(f);$('preview').append(img)})});
+$('form').addEventListener('submit',async e=>{e.preventDefault();const files=[...$('photos').files];if(files.length>5){alert('Sélectionnez au maximum 5 photos.');return}const data={dispositif:$('device').value,autre:$('other').value,numeroSerie:$('serial').value,client:$('client').value,foyer:$('foyer').value,technicien:$('technician').value,description:$('description').value,dateConstat:new Date().toLocaleString('fr-FR'),photos:files.map(f=>({nom:f.name,type:f.type,taille:f.size}))};$('status').style.display='block';$('status').textContent='Le formulaire est complet, mais l’envoi automatique n’est pas encore activé : il faut relier ce formulaire au script Google Apps Script EuroMed et définir l’adresse destinataire. Aucune demande n’a été envoyée.\n\nRésumé prêt :\n'+JSON.stringify(data,null,2);});
+</script></body></html>
