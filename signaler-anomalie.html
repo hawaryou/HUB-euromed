@@ -121,7 +121,7 @@ async function queueAll(){const db=await openQueueDB();return new Promise((resol
 async function queueDelete(id){const db=await openQueueDB();return new Promise((resolve,reject)=>{const tx=db.transaction(QUEUE_STORE,'readwrite');tx.objectStore(QUEUE_STORE).delete(id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>{db.close();reject(tx.error)}})}
 async function queueRefresh(){
  const list=$('offlineQueueList'),summary=$('offlineQueueSummary');if(!list||!summary)return;
- try{const items=await queueAll();summary.textContent=items.length?items.length+' signalement(s) conservé(s) sur cet appareil. Les éléments « transmis à vérifier » ne sont pas renvoyés automatiquement pour éviter les doublons.':'Aucun signalement en attente.';
+ try{const items=await queueAll();for(const item of items){if(item.state==='sending'){item.state='sent-unconfirmed';item.lastError='Page fermée pendant une tentative : vérifiez la réception avant toute nouvelle tentative.';await queuePut(item)}}summary.textContent=items.length?items.length+' signalement(s) conservé(s) sur cet appareil. Les éléments « transmis à vérifier » ne sont pas renvoyés automatiquement pour éviter les doublons.':'Aucun signalement en attente.';
  list.innerHTML='';
  items.forEach(item=>{const row=document.createElement('div');row.style.cssText='border:1px solid #315477;border-radius:12px;padding:12px;margin:8px 0;background:#07182d';
  const title=document.createElement('strong');title.textContent=(item.payload.dispositif||'Dispositif')+' — Série '+(item.payload.numeroSerie||'non renseignée');
