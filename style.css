@@ -170,3 +170,6 @@ html[data-theme="light"] .hero-mascot img{z-index:2!important;mix-blend-mode:mul
 
 /* Indicateur de connectivité hors ligne */
 .status-pill.offline{border-color:#b97832;background:#3a2a17;color:#ffe0a3}.status-pill.offline>span:first-child{background:#ffb547;box-shadow:0 0 9px #ffb547}
+
+/* Priorité aux fenêtres et aperçus : les commandes fixes restent sous les boutons de fermeture. */
+.theme-toggle{z-index:9000!important}.modal:not(.hidden),.pdf-preview-modal.show,.privacy-modal.show{z-index:20000!important}
