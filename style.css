@@ -326,3 +326,22 @@ html[data-theme="light"] body .maintenance-scroller .maintenance-tile .tile-orb,
 html[data-theme="light"] body .screen-home .maintenance-tile span,
 html[data-theme="light"] body .screen-home .maintenance-tile small,
 html[data-theme="light"] body .screen-home .maintenance-tile .tile-orb{color:#fff!important}
+
+
+/* Correctif final 2026-10-29 : conserver les vraies couleurs des tuiles de maintenance en mode clair */
+html[data-theme="light"] body button.maintenance-tile.purple,
+html[data-theme="light"] body main button.maintenance-tile.purple { background:linear-gradient(145deg,#9a54ff,#5a28e9 68%,#301f9d)!important; background-image:linear-gradient(145deg,#9a54ff,#5a28e9 68%,#301f9d)!important; }
+html[data-theme="light"] body button.maintenance-tile.green,
+html[data-theme="light"] body main button.maintenance-tile.green { background:linear-gradient(145deg,#63ec58,#14bf68 67%,#087d62)!important; background-image:linear-gradient(145deg,#63ec58,#14bf68 67%,#087d62)!important; }
+html[data-theme="light"] body button.maintenance-tile.blue,
+html[data-theme="light"] body main button.maintenance-tile.blue { background:linear-gradient(145deg,#28b7ff,#1873ed 65%,#1d43bc)!important; background-image:linear-gradient(145deg,#28b7ff,#1873ed 65%,#1d43bc)!important; }
+html[data-theme="light"] body button.maintenance-tile.orange,
+html[data-theme="light"] body main button.maintenance-tile.orange { background:linear-gradient(145deg,#ffbd22,#ff7c1f 62%,#ef3f24)!important; background-image:linear-gradient(145deg,#ffbd22,#ff7c1f 62%,#ef3f24)!important; }
+html[data-theme="light"] body button.maintenance-tile.pink,
+html[data-theme="light"] body main button.maintenance-tile.pink { background:linear-gradient(145deg,#ff4cac,#ee1b86 65%,#b31c92)!important; background-image:linear-gradient(145deg,#ff4cac,#ee1b86 65%,#b31c92)!important; }
+html[data-theme="light"] body button.maintenance-tile,
+html[data-theme="light"] body button.maintenance-tile * { color:#fff!important; }
+
+/* Le bouton de thème défile avec la page dans les deux thèmes, sans rester fixé à l'écran */
+html body .theme-toggle { position:absolute!important; top:5px!important; right:8px!important; }
+@media(max-width:760px){ html body .theme-toggle { position:absolute!important; top:calc(6px + env(safe-area-inset-top,0px))!important; right:8px!important; } }
