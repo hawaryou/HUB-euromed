@@ -277,16 +277,13 @@ html[data-theme="light"] .nav-item.active{background:linear-gradient(135deg,#c8e
 html[data-theme="light"] .ready-banner{background:linear-gradient(110deg,#e0f7ff,#e8f9ef)!important;border-color:#a8d8e8!important}
 
 
-/* Mobile: bouton de thème discret et espace réservé pour ne jamais chevaucher les titres */
-@media (max-width:760px){
- html body{padding-top:54px!important}
+
+
+/* Mobile : logo en haut à gauche et commande de thème en haut à droite, sans bande vide */
+@media(max-width:760px){
+ html body{padding-top:0!important}
  .theme-toggle{position:fixed!important;top:calc(6px + env(safe-area-inset-top,0px))!important;right:8px!important;z-index:40!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;padding:0!important;gap:0!important;border-radius:50%!important;font-size:19px!important;box-shadow:0 2px 8px rgba(10,35,65,.22)!important;opacity:.92}
  #themeToggleLabel{display:none!important}
  .theme-toggle:active{transform:scale(.96)}
 }
 @media print{.theme-toggle{display:none!important}}
-
-
-/* Ajustement final de l'espacement mobile : ne pas cumuler le décalage du body */
-@media(max-width:760px){html body{padding-top:0!important}.app-shell{padding-top:54px!important}}
-@media print{html body{padding-top:0!important}.app-shell{padding-top:0!important}.top,.page{margin-top:0!important;padding-top:0!important}}
