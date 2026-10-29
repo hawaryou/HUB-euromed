@@ -950,3 +950,10 @@ html body .demo-panel .demo-slide-heading > .demo-slide-icon{display:none!import
  html body .demo-panel .demo-step-track button.demo-step-dot.is-active,
  html[data-theme="light"] body .demo-panel .demo-step-track button.demo-step-dot.is-active{height:36px!important;transform:translateY(-3px)!important}
 }
+
+
+/* Chibi EuroMed agrandi dans la page Documentation */
+.documentation-wrap .doc-mascot{align-items:center;gap:12px;margin:20px 4px 0;min-height:230px}
+.documentation-wrap .doc-mascot>div{font-size:clamp(18px,4.4vw,23px);flex:1;line-height:1.2}
+.documentation-wrap .doc-mascot img{width:clamp(205px,58vw,270px);height:clamp(205px,58vw,270px);max-width:62%;flex:0 0 auto;object-fit:contain;object-position:center;filter:drop-shadow(0 14px 15px #0008)}
+@media(max-width:390px){.documentation-wrap .doc-mascot{gap:4px;margin-left:0;margin-right:0}.documentation-wrap .doc-mascot img{width:205px;height:205px;max-width:58%}.documentation-wrap .doc-mascot>div{font-size:17px}}
