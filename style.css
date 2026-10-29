@@ -265,3 +265,13 @@ body::before,
 
 /* Bulles désactivées sur tous les écrans (ordinateur et téléphone) */
 body::before,.app-shell::before{content:none!important;display:none!important;animation:none!important;background:none!important;filter:none!important;will-change:auto!important}
+
+/* Mode clair plus chaleureux : arrière-plans pastel, sans bulles ni animation */
+html[data-theme="light"] body{background:linear-gradient(135deg,#dff5ff 0%,#fff0f6 34%,#eee9ff 68%,#ddf9ed 100%)!important;background-attachment:fixed!important}
+html[data-theme="light"] .app-shell{background:linear-gradient(160deg,#e6f6ff 0%,#fff0f7 48%,#e9e7ff 100%)!important}
+html[data-theme="light"] .app-content{background:linear-gradient(145deg,#e3f6ff 0%,#fff2f8 42%,#f0ecff 72%,#e2faef 100%)!important}
+html[data-theme="light"] .hero-card{background:linear-gradient(145deg,#d9f2ff 0%,#f1eaff 54%,#ffe5f1 100%)!important;border-color:#a8d8ee!important}
+html[data-theme="light"] .brand-box,html[data-theme="light"] .status-pill{background:linear-gradient(135deg,#d3f2ff,#eee4ff)!important}
+html[data-theme="light"] .bottom-nav{background:linear-gradient(110deg,#e5f7ff,#fff0f7,#eee9ff)!important}
+html[data-theme="light"] .nav-item.active{background:linear-gradient(135deg,#c8efff,#e4d9ff)!important}
+html[data-theme="light"] .ready-banner{background:linear-gradient(110deg,#e0f7ff,#e8f9ef)!important;border-color:#a8d8e8!important}
