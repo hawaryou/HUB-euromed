@@ -285,3 +285,8 @@ html[data-theme="light"] .ready-banner{background:linear-gradient(110deg,#e0f7ff
  .theme-toggle:active{transform:scale(.96)}
 }
 @media print{.theme-toggle{display:none!important}}
+
+
+/* Ajustement final de l'espacement mobile : ne pas cumuler le décalage du body */
+@media(max-width:760px){html body{padding-top:0!important}.app-shell{padding-top:54px!important}}
+@media print{html body{padding-top:0!important}.app-shell{padding-top:0!important}.top,.page{margin-top:0!important;padding-top:0!important}}
