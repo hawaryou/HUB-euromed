@@ -300,3 +300,29 @@ html[data-theme="light"] body .nav-item.active,html[data-theme="light"] body .na
 html[data-theme="light"] body input,html[data-theme="light"] body select,html[data-theme="light"] body textarea{border:1.5px solid #789bb8!important;box-shadow:inset 0 1px 2px rgba(15,50,80,.06)!important}
 html[data-theme="light"] body label{color:#183b56!important;font-weight:650}
 html[data-theme="light"] body h1,html[data-theme="light"] body h2,html[data-theme="light"] body h3{color:#075985!important}
+
+/* Conserver les couleurs propres à chaque tuile de maintenance en mode clair */
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile,
+html[data-theme="light"] body main .maintenance-scroller .maintenance-tile,
+html[data-theme="light"] body .screen-home .maintenance-tile{
+ color:#fff!important;
+ border-color:#ffffff40!important;
+ box-shadow:0 14px 25px rgba(20,45,90,.22)!important;
+ background-image:initial;
+}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.purple,
+html[data-theme="light"] body .screen-home .maintenance-tile.purple{background:linear-gradient(145deg,#9a54ff,#5a28e9 68%,#301f9d)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.green,
+html[data-theme="light"] body .screen-home .maintenance-tile.green{background:linear-gradient(145deg,#63ec58,#14bf68 67%,#087d62)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.blue,
+html[data-theme="light"] body .screen-home .maintenance-tile.blue{background:linear-gradient(145deg,#28b7ff,#1873ed 65%,#1d43bc)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.orange,
+html[data-theme="light"] body .screen-home .maintenance-tile.orange{background:linear-gradient(145deg,#ffbd22,#ff7c1f 62%,#ef3f24)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile.pink,
+html[data-theme="light"] body .screen-home .maintenance-tile.pink{background:linear-gradient(145deg,#ff4cac,#ee1b86 65%,#b31c92)!important}
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile span,
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile small,
+html[data-theme="light"] body .maintenance-scroller .maintenance-tile .tile-orb,
+html[data-theme="light"] body .screen-home .maintenance-tile span,
+html[data-theme="light"] body .screen-home .maintenance-tile small,
+html[data-theme="light"] body .screen-home .maintenance-tile .tile-orb{color:#fff!important}
