@@ -9,7 +9,13 @@
 <meta name="apple-mobile-web-app-title" content="EuroMed">
 <title>EuroMed — Hub Technicien</title>
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=20261029-maintenance-colors-scroll-fix">
+<link rel="stylesheet" href="style.css?v=20261029-demo-progress-v2">
+<style id="tools-checkups-navigation">
+.tools-checkup-heading{margin:22px 0 4px}
+button.tool-launch{font:inherit;text-align:left;width:100%;cursor:pointer}
+.tool-checkup-truck{background:linear-gradient(120deg,#164e63,#0891b2);color:#fff!important}
+.tool-checkup-parts{background:linear-gradient(120deg,#4c1d95,#7c3aed);color:#fff!important}
+</style>
 </head>
 <body>
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Passer en mode clair" aria-pressed="false"><span aria-hidden="true">☀️</span><span id="themeToggleLabel">Mode clair</span></button>
@@ -26,6 +32,7 @@
   <nav class="bottom-nav" aria-label="Navigation principale">
     <button class="nav-item active" data-page="home" type="button"><span class="nav-icon">⌂</span><span>Accueil</span></button>
     <button class="nav-item" data-page="maintenance" type="button"><span class="nav-icon">⚙</span><span>Maintenance</span></button>
+    <button class="nav-item" data-page="tools" type="button"><span class="nav-icon">☷</span><span>Outils</span></button>
     <button class="nav-item" data-page="documentation" type="button"><span class="nav-icon">▤</span><span>Documentation</span></button>
   </nav>
 </div>
@@ -39,10 +46,10 @@ const MAINTENANCE = [
 ];
 const app=document.getElementById('app');
 const navItems=[...document.querySelectorAll('.nav-item')];
-const logo=()=>`<img class="logo" src="assets/euromed-logo.png" alt="EuroMed">`;
+const logo=()=>`<img class="logo" src="https://raw.githubusercontent.com/hawaryou/HUB-euromed/main/assets/euromed-logo.png" alt="EuroMed">`;
 const arrow=()=>'<span class="arrow">›</span>';
 function setNav(page){navItems.forEach(x=>x.classList.toggle('active',x.dataset.page===page));}
-function showPage(page){setNav(page);window.scrollTo({top:0,behavior:'smooth'}); if(page==='maintenance')maintenancePage(); else if(page==='documentation')documentationPage(); else home();}
+function showPage(page){setNav(page);window.scrollTo({top:0,behavior:'smooth'}); if(page==='maintenance')maintenancePage(); else if(page==='documentation')documentationPage(); else if(page==='tools')toolsPage(); else if(page==='checkupTruck')checkupTruckPage(); else if(page==='checkupParts')checkupPartsPage(); else home();}
 function quickIcon(kind){return kind==='delivery'?'🚚':'📦'}
 function home(){
  app.innerHTML=`
@@ -57,8 +64,9 @@ function home(){
        <span class="mini-label">HUB TECHNICIEN</span>
        <h1>Bonjour 👋<br><strong>Prêt pour l'intervention ?</strong></h1>
        <p>Tous vos outils EuroMed réunis dans une seule application.</p>
+       <button class="demo-launch-btn" id="openDemoMode" type="button">▶ Lancer le mode démonstration</button>
      </div>
-     <div class="hero-mascot"><div class="mascot-ring"></div><img src="assets/chibi-euromed.png" alt="Technicien EuroMed"></div>
+     <div class="hero-mascot"><div class="mascot-ring"></div><img src="chibi-euromed.png" alt="Technicien EuroMed"></div>
    </div>
    <div class="section-head"><div><span class="section-kicker">ACCÈS RAPIDE</span><h2>Vos outils</h2></div></div>
    <div class="quick-grid">
@@ -66,6 +74,12 @@ function home(){
      <a class="quick-card reprise" href="https://hawaryou.github.io/bon-reprise-euromed/"><div class="quick-art">↩️</div><div><b>Carnet de<br>reprise</b><small>Reprendre du matériel</small></div>${arrow()}</a>
      <a class="quick-card inventory" href="https://hawaryou.github.io/inventaire-materiel/"><div class="quick-art">${quickIcon('inventory')}</div><div><b>Inventaire<br>matériel</b><small>Gérer le parc</small></div>${arrow()}</a>
      <a class="quick-card anomaly" href="signaler-anomalie.html"><div class="quick-art">⚠️</div><div><b>Signaler une<br>anomalie</b><small>Demander une intervention</small></div>${arrow()}</a>
+   </div>
+
+   <div class="section-head"><div><span class="section-kicker">SUIVI HEBDOMADAIRE</span><h2>Check-up hebdomadaires</h2></div></div>
+   <div class="quick-grid checkup-category-grid">
+     <button class="quick-card" data-page="checkupTruck" type="button" style="text-align:left;color:inherit"><div class="quick-art">🚐</div><div><b>Check-up<br>des camions</b><small>Crafter et Jumper</small></div>${arrow()}</button>
+     <button class="quick-card" data-page="checkupParts" type="button" style="text-align:left;color:inherit"><div class="quick-art">🧰</div><div><b>Check-up des<br>pièces détachées</b><small>Stock dans le camion</small></div>${arrow()}</button>
    </div>
    <div class="section-head maintenance-head"><div><span class="section-kicker">CONTRÔLE & SUIVI</span><h2>Nos maintenances</h2></div><button class="view-all" data-page="maintenance">Voir tout</button></div>
    <div class="maintenance-scroller">${MAINTENANCE.map((x,i)=>`<button class="maintenance-tile ${x.cls}" data-maint="${x.id}" type="button"><div class="tile-orb">${x.icon}</div><span>${x.title}</span><small>Ouvrir la maintenance</small><i>›</i></button>`).join('')}</div>
@@ -75,20 +89,45 @@ function home(){
  app.querySelectorAll('[data-maint]').forEach(b=>b.addEventListener('click',()=>{const x=MAINTENANCE.find(m=>m.id===b.dataset.maint);location.href=x.url;}));
 }
 function maintenancePage(){
- app.innerHTML=`
- <section class="page-top dark-top">
-   <div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">⚙️ <span>Maintenance</span></div><div class="top-spacer"></div></div>
-   <p>Sélectionnez la maintenance souhaitée.</p>
- </section>
- <section class="maintenance-page-section">
-   <div class="tab-scroller" role="tablist">${MAINTENANCE.map((x,i)=>`<button class="maint-tab ${i===0?'active':''}" data-id="${x.id}" role="tab" type="button">${x.short}</button>`).join('')}</div>
-   <div id="maintenance-panel"></div>
-   <div class="dots" id="dots">${MAINTENANCE.map((_,i)=>`<span class="${i===0?'active':''}"></span>`).join('')}</div>
+ app.innerHTML=`<section class="page-top dark-top"><div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">⚙️ <span>Nos maintenances</span></div><div class="top-spacer"></div></div><p>Choisissez le matériel à contrôler ou à entretenir.</p></section><section class="tools-directory maintenance-directory">
+ ${MAINTENANCE.map((x,i)=>`<a class="tool-launch maintenance-launch maint-${x.cls}" href="${x.url}"><span class="tool-launch-icon">${x.icon}</span><span><b>${x.title}</b><small>${x.subtitle}</small></span><span class="tool-arrow">›</span></a>`).join('')}
  </section>`;
- const panel=app.querySelector('#maintenance-panel');
- function select(id){const item=MAINTENANCE.find(x=>x.id===id); const idx=MAINTENANCE.indexOf(item); app.querySelectorAll('.maint-tab').forEach(t=>t.classList.toggle('active',t.dataset.id===id)); app.querySelectorAll('.dots span').forEach((d,i)=>d.classList.toggle('active',i===idx)); panel.innerHTML=`<article class="selected-maint ${item.cls}"><div class="selected-art">${item.icon}</div><span class="selected-kicker">MAINTENANCE</span><h2>${item.title}</h2><p>${item.subtitle}</p><a class="big-open" href="${item.url}">Ouvrir la maintenance ${arrow()}</a><div class="direct-link">↗ Lien direct</div></article>`;}
- app.querySelectorAll('.maint-tab').forEach(t=>t.addEventListener('click',()=>select(t.dataset.id))); app.querySelector('.back-btn').addEventListener('click',()=>showPage('home')); select('lit');
+ app.querySelector('.back-btn').onclick=()=>showPage('home');
 }
+function toolsPage(){
+ app.innerHTML=`<section class="page-top dark-top"><div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">🧰 <span>Vos outils</span></div><div class="top-spacer"></div></div><p>Tous les outils quotidiens du technicien EuroMed, réunis ici.</p></section><section class="tools-directory">
+ <a class="tool-launch tool-delivery" href="https://hawaryou.github.io/Bon-de-livraison-euromed/"><span class="tool-launch-icon">🚚</span><span><b>Carnet de livraison</b><small>Créer et signer un bon de livraison</small></span><span class="tool-arrow">›</span></a>
+ <a class="tool-launch tool-reprise" href="https://hawaryou.github.io/bon-reprise-euromed/"><span class="tool-launch-icon">↩️</span><span><b>Carnet de reprise</b><small>Tracer le matériel repris</small></span><span class="tool-arrow">›</span></a>
+ <a class="tool-launch tool-inventory" href="https://hawaryou.github.io/inventaire-materiel/"><span class="tool-launch-icon">📦</span><span><b>Inventaire du matériel</b><small>Consulter et gérer le parc</small></span><span class="tool-arrow">›</span></a>
+ <a class="tool-launch tool-anomaly" href="signaler-anomalie.html"><span class="tool-launch-icon">⚠️</span><span><b>Signaler une anomalie</b><small>Déclarer un problème technique</small></span><span class="tool-arrow">›</span></a>
+ <div class="section-head tools-checkup-heading"><div><span class="section-kicker">SUIVI HEBDOMADAIRE</span><h2>Check-up hebdomadaires</h2></div></div>
+ <button class="tool-launch tool-checkup-truck" type="button" data-open-checkup="truck"><span class="tool-launch-icon">🚐</span><span><b>Check-up des camions</b><small>Contrôle du Crafter et du Jumper</small></span><span class="tool-arrow">›</span></button>
+ <button class="tool-launch tool-checkup-parts" type="button" data-open-checkup="parts"><span class="tool-launch-icon">🧰</span><span><b>Check-up des pièces détachées</b><small>Vérifier les pièces et consommables dans le camion</small></span><span class="tool-arrow">›</span></button>
+ </section>`;
+ app.querySelector('.back-btn').onclick=()=>showPage('home');
+ app.querySelector('[data-open-checkup="truck"]').onclick=()=>showPage('checkupTruck');
+ app.querySelector('[data-open-checkup="parts"]').onclick=()=>showPage('checkupParts');
+}
+function checkupTruckPage(){renderCheckup('truck')}
+function checkupPartsPage(){renderCheckup('parts')}
+function renderCheckup(mode){
+ const isTruck=mode==='truck';
+ const veh=['État de la carrosserie','Pneus (pression et usure)','Feux (phares, arrière, clignotants, freins)','Rétroviseurs','Vitres (fissures, éclats)','Niveau d’huile','Liquide de refroidissement','Liquide de frein','Essuie-glaces et lave-glace','Tableau de bord (voyants d’alerte)','Ceintures de sécurité','Système de communication','Équipement médical','Extincteur','Hygiène et propreté','Côté droit inspecté','Côté gauche inspecté','Avant inspecté','Arrière inspecté'];
+ const parts=[[1,'Gonfleur à air pour matelas Nausiflow 512'],[1,'Moteur hauteur variable LINAK'],[1,'Moteur hauteur variable DEWERT'],[1,'Moteur relève-buste LINAK'],[1,'Moteur relève-buste DEWERT'],[1,'Télécommande de lit LINAK'],[1,'Télécommande de lit DEWERT'],[4,'Roues de lit + visserie'],[2,'Barres de liaison de sommier de lit'],[6,'Papillons de lit'],[4,'Attaches barrières de lit'],[2,'Crémaillères de sommier pied pour lit'],[2,'Attaches pour sommier pied'],[1,'Boîte de masques type II'],[1,'Mousse nettoyante Hartmann'],[1,'Bouteille de gel hydroalcoolique'],[1,'Boîte de gants latex/vinyle'],[1,'Paquet de lingettes désinfectantes'],[1,'Sachet poubelle'],[1,'Blouse de protection intégrale']];
+ const title=isTruck?'Check-up des camions':'Check-up des pièces détachées';
+ const subtitle=isTruck?'Contrôle extérieur, mécanique et équipements du Crafter ou du Jumper.':'Inventaire hebdomadaire des pièces détachées et consommables présents dans le camion.';
+ const key='euromed-weekly-checkups-'+mode;
+ const fields=isTruck?veh.map((x,i)=>`<div class="cu-row"><label class="cu-item"><span>${x}</span><select name="veh_${i}" aria-label="${x}"><option value="">À vérifier</option><option>OK</option><option>Problème</option><option>Sans objet</option></select></label><input class="cu-detail" name="veh_note_${i}" placeholder="Détail / action à prévoir"></div>`).join(''):parts.map((p,i)=>`<div class="cu-row"><div class="part-name"><b>${p[0]}×</b><span>${p[1]}</span></div><label class="part-check"><input type="checkbox" name="part_present_${i}"> Présent</label><label class="part-check"><input type="checkbox" name="part_missing_${i}"> Manquant</label><input class="cu-detail" name="part_note_${i}" placeholder="Quantité constatée / remarque"></div>`).join('');
+ app.innerHTML=`<section class="page-top dark-top"><div class="topbar"><button class="back-btn" data-page="home">‹</button><div class="page-title">${isTruck?'🚐':'🧰'} <span>${title}</span></div><div class="top-spacer"></div></div><p>${subtitle}</p></section><section class="checkup-wrap"><div class="checkup-note">Contrôle hebdomadaire de démonstration. Les données sont conservées localement sur cet appareil ; imprimez le formulaire signé pour l’archivage.</div><form id="checkupForm"><section class="checkup-section"><h2>1. Identification</h2><div class="checkup-fields"><label>Véhicule<select id="cuVehicle" required><option>Volkswagen Crafter</option><option>Citroën Jumper</option></select></label><label>Date<input id="cuDate" type="date" required></label><label>Nom du technicien<input id="cuTech" required placeholder="Nom et prénom"></label>${isTruck?'<label>Kilométrage<input id="cuKm" type="number" min="0" placeholder="Kilométrage"></label>':''}</div></section><section class="checkup-section"><h2>2. ${isTruck?'Vérification du camion':'Pièces détachées à bord'}</h2><p class="checkup-sub">${isTruck?'Inspectez chaque zone du véhicule puis sélectionnez l’état de chaque élément.':'Vérifiez la présence des quantités attendues et signalez les éléments manquants.'}</p>${isTruck?`<div class="vehicle-views"><div class="vehicle-view view-side"><div class="van-drawing"><span class="van-cab"></span><span class="van-body"></span><i class="wheel w1"></i><i class="wheel w2"></i></div><b>Côté droit</b><small>Carrosserie, portes, pneus</small></div><div class="vehicle-view view-side"><div class="van-drawing reverse"><span class="van-cab"></span><span class="van-body"></span><i class="wheel w1"></i><i class="wheel w2"></i></div><b>Côté gauche</b><small>Carrosserie, portes, pneus</small></div><div class="vehicle-view view-front"><div class="van-front"><i></i><i></i><span></span></div><b>Avant</b><small>Capot, pare-brise, feux</small></div><div class="vehicle-view view-rear"><div class="van-rear"><i></i><span></span><i></i></div><b>Arrière</b><small>Portes, feux, pare-chocs</small></div></div>`:''}<div class="checkup-progress"><span id="cuProgressText">0 élément vérifié</span><div><i id="cuProgressBar"></i></div></div><div class="checkup-list">${fields}</div></section><section class="checkup-section"><h2>3. Observations et signature</h2><label class="full-label">Observations générales<textarea id="cuNotes" rows="3" placeholder="Anomalies, pièces à commander, actions réalisées…"></textarea></label><label class="full-label">Signature du technicien</label><canvas id="cuSignature"></canvas><button class="secondary-btn" id="clearSig" type="button">Effacer la signature</button></section><div class="checkup-actions"><button class="big-open" type="submit">💾 Enregistrer le contrôle</button><button class="secondary-btn" id="printCu" type="button">🖨️ Imprimer / PDF</button><button class="secondary-btn" id="newCu" type="button">Nouveau contrôle</button></div></form><section class="checkup-section"><h2>Historique de ce check-up</h2><div id="cuHistory"></div></section></section>`;
+ app.querySelector('.back-btn').onclick=()=>showPage('home');const date=app.querySelector('#cuDate');date.value=new Date().toISOString().slice(0,10);const canvas=app.querySelector('#cuSignature'),ctx=canvas.getContext('2d');let drawing=false,ink=false;
+ function resize(){const r=canvas.getBoundingClientRect();canvas.width=Math.max(300,Math.floor(r.width*devicePixelRatio));canvas.height=150*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.lineWidth=2.5;ctx.lineCap='round';ctx.strokeStyle='#10243b'}resize();
+ function pt(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}canvas.onpointerdown=e=>{drawing=true;ink=true;canvas.setPointerCapture(e.pointerId);const p=pt(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};canvas.onpointermove=e=>{if(drawing){const p=pt(e);ctx.lineTo(p.x,p.y);ctx.stroke()}};['pointerup','pointercancel'].forEach(n=>canvas.addEventListener(n,()=>drawing=false));app.querySelector('#clearSig').onclick=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);ink=false};
+ function updateProgress(){const controls=[...app.querySelectorAll('.checkup-list select')];const done=controls.filter(x=>x.value!=='').length;const total=controls.length;const label=app.querySelector('#cuProgressText');const bar=app.querySelector('#cuProgressBar');if(label)label.textContent=done+' / '+total+' éléments vérifiés';if(bar)bar.style.width=(total?done/total*100:0)+'%';controls.forEach(x=>{x.closest('.cu-row')?.classList.toggle('cu-problem',x.value==='Problème');x.closest('.cu-row')?.classList.toggle('cu-ok',x.value==='OK')})}app.querySelectorAll('.checkup-list select').forEach(x=>x.addEventListener('change',updateProgress));updateProgress();
+ function history(){let a=[];try{a=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}app.querySelector('#cuHistory').innerHTML=a.length?a.slice().reverse().map(x=>`<div class="cu-history-row"><b>${x.vehicle} — ${x.date}</b><span>${x.tech} · ${x.status}</span></div>`).join(''):'<p class="checkup-sub">Aucun contrôle enregistré sur cet appareil.</p>'}
+ app.querySelector('#checkupForm').onsubmit=e=>{e.preventDefault();const form=e.currentTarget;const data={vehicle:app.querySelector('#cuVehicle').value,date:date.value,tech:app.querySelector('#cuTech').value,km:app.querySelector('#cuKm')?.value||'',notes:app.querySelector('#cuNotes').value,signature:ink?canvas.toDataURL('image/png'):'',fields:{},status:'Contrôle enregistré'};form.querySelectorAll('[name]').forEach(el=>data.fields[el.name]=el.type==='checkbox'?el.checked:el.value);let a=[];try{a=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}a.push(data);try{localStorage.setItem(key,JSON.stringify(a));alert('Contrôle enregistré sur cet appareil. Pensez à imprimer une copie pour l’archivage.');history()}catch(err){alert('Stockage local saturé. Imprimez le contrôle pour le conserver.')}};
+ app.querySelector('#printCu').onclick=()=>window.print();app.querySelector('#newCu').onclick=()=>{if(confirm('Commencer un nouveau contrôle ?')){if(isTruck)checkupTruckPage();else checkupPartsPage()}};history();
+}
+
 function documentationPage(){
  app.innerHTML=`
  <section class="page-top dark-top doc-top">
@@ -97,12 +136,12 @@ function documentationPage(){
  </section>
  <section class="documentation-wrap">
    <div class="doc-card"><div class="doc-art">📄<span>PDF</span></div><span class="selected-kicker">DOCUMENTS EUROMED</span><h2>Envoi PDF EuroMed</h2><p>Accédez à la documentation, aux notices et envoyez vos documents.</p><a class="big-open" href="https://hawaryou.github.io/envoi_pdf_euromed/">Ouvrir la documentation ${arrow()}</a><div class="direct-link">↗ https://hawaryou.github.io/envoi_pdf_euromed/</div></div>
-   <div class="doc-mascot"><div>Ensemble pour<br><strong>votre matériel !</strong></div><img src="assets/chibi-euromed.png" alt="EuroMed"></div>
+   <div class="doc-mascot"><div>Ensemble pour<br><strong>votre matériel !</strong></div><img src="chibi-euromed.png" alt="EuroMed"></div>
  </section>`;
  app.querySelector('.back-btn').addEventListener('click',()=>showPage('home'));
 }
 navItems.forEach(item=>item.addEventListener('click',()=>showPage(item.dataset.page)));
-document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b&&b.classList.contains('view-all'))showPage(b.dataset.page);});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b||b.classList.contains('nav-item')||b.classList.contains('view-all'))return;if(b.tagName==='BUTTON'&&b.dataset.page)showPage(b.dataset.page);});
 home();
 </script>
 <script>
@@ -110,6 +149,156 @@ home();
  function update(){var pill=document.getElementById("connectivityStatus"),label=document.getElementById("connectivityLabel");if(!pill||!label)return;var online=navigator.onLine;label.textContent=online?"EN LIGNE":"HORS CONNEXION";pill.classList.toggle("offline",!online);pill.setAttribute("aria-label",online?"Connexion disponible":"Mode hors connexion");}
  window.addEventListener("online",update);window.addEventListener("offline",update);update();
  if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("./service-worker.js").catch(function(e){console.warn("Mode hors connexion indisponible",e);});}
+})();
+</script>
+<script>
+/* Sur téléphone, la barre de navigation apparaît au toucher puis se replie après quelques secondes. */
+(function(){
+  var mq = window.matchMedia('(max-width: 700px)');
+  var timer = null;
+  function reveal(){
+    if (!mq.matches) { document.body.classList.remove('nav-visible'); return; }
+    document.body.classList.add('nav-visible');
+    if (timer) window.clearTimeout(timer);
+    timer = window.setTimeout(function(){
+      document.body.classList.remove('nav-visible');
+    }, 4500);
+  }
+  document.addEventListener('touchstart', reveal, {passive:true});
+  document.addEventListener('pointerdown', function(e){
+    if (e.pointerType === 'touch' || e.pointerType === 'pen') reveal();
+  }, {passive:true});
+  document.addEventListener('focusin', function(e){
+    if (mq.matches && e.target.closest && e.target.closest('.bottom-nav')) reveal();
+  });
+  window.addEventListener('resize', function(){
+    if (!mq.matches) {
+      if (timer) window.clearTimeout(timer);
+      document.body.classList.remove('nav-visible');
+    }
+  });
+})();
+</script>
+
+<script>
+/* Mode présentation EuroMed : parcours guidé du HUB et de ses applications. */
+(function(){
+ const slides=[
+  {eyebrow:'01 · LE HUB EUROMED',title:'Un portail unique pour le technicien',text:'Le HUB est la porte d’entrée vers les outils terrain EuroMed. Il rassemble les applications web créées pour réduire le papier, guider les contrôles et retrouver rapidement les bons documents.',items:[
+   ['🏠','Accueil centralisé','Accès direct aux bons, à l’inventaire, au signalement d’anomalie, aux check-ups et aux maintenances.'],
+   ['📱','Pensé pour le terrain','Interface responsive, grandes zones tactiles et navigation utilisable sur smartphone comme sur ordinateur.'],
+   ['🎨','Interface personnalisable','Cartes colorées, thème clair/sombre et identité visuelle EuroMed avec logo et chibi.'],
+   ['🧭','Navigation cohérente','Les applications disposent d’un bouton Menu pour revenir au HUB, afin de garder un parcours simple.']
+  ]},
+  {eyebrow:'02 · BON DE LIVRAISON',title:'Formaliser chaque livraison',text:'Le carnet numérique remplace le bon papier et rassemble les informations utiles à la traçabilité de la livraison.',items:[
+   ['👤','Destinataire','Établissement ou client, adresse, ville, e-mail et référence de commande.'],
+   ['📦','Matériel livré','Tableau modifiable avec nom, quantité, désignation du produit et numéro de série ou de lot ; ajout de plusieurs lignes.'],
+   ['✍️','Réception signée','Date et lieu de livraison, signature du client et signature du technicien/installateur.'],
+   ['📷','Destinataire absent','Option dédiée avec prise de photo du lieu de dépôt à joindre au bon.'],
+   ['📧','Envoi avec pièces jointes','Le bon est adressé à EuroMed et peut aussi être envoyé au client avec plusieurs notices/protocoles sélectionnés.']
+  ],links:[['Ouvrir le bon de livraison','https://hawaryou.github.io/Bon-de-livraison-euromed/']]},
+  {eyebrow:'03 · BON DE REPRISE',title:'Tracer le matériel récupéré',text:'Le carnet de reprise reprend la présentation graphique du bon de livraison mais répond au scénario inverse : un technicien récupère du matériel chez un patient ou un établissement.',items:[
+   ['🧾','Identification','Renseigner le destinataire et les informations de reprise sans champ téléphone superflu.'],
+   ['🛠️','Matériel repris','Tableau pour identifier chaque équipement et renseigner son état au moment de la récupération.'],
+   ['⚠️','Motif et anomalie','Motifs de reprise présentés clairement ; la détection d’une anomalie permet de joindre une photo.'],
+   ['✍️','Traçabilité','Document de reprise signé et envoyé par e-mail via son propre Apps Script, indépendant de celui de la livraison.']
+  ],links:[['Ouvrir le bon de reprise','https://hawaryou.github.io/bon-reprise-euromed/']]},
+  {eyebrow:'04 · INVENTAIRE DU MATÉRIEL',title:'Identifier le matériel par scan',text:'L’application d’inventaire aide à relever les numéros de série sur site, sans devoir les retaper manuellement.',items:[
+   ['📷','Scan EAN-13','La caméra du téléphone lit le code-barres du lit et récupère son numéro de série. Le code est contrôlé, y compris son chiffre de contrôle.'],
+   ['🛏️','Lit obligatoire','Le numéro de série du lit constitue l’identifiant requis pour poursuivre la saisie.'],
+   ['🧰','Équipements associés','Potence, barrières et matelas à air peuvent être scannés en complément.'],
+   ['📋','Localisation','Foyer/établissement, nom et chambre sont saisis puis préremplis dans le Google Form.'],
+   ['📊','Enregistrement','Après vérification, le formulaire est envoyé et la réponse est enregistrée dans le Google Sheet associé.']
+  ],links:[['Ouvrir l’inventaire','https://hawaryou.github.io/inventaire-materiel/']]},
+  {eyebrow:'05 · SIGNALER UNE ANOMALIE',title:'Faire remonter un problème terrain',text:'Le formulaire structure les informations nécessaires pour comprendre le défaut et préparer une intervention.',items:[
+   ['🩺','Dispositif concerné','Lit, fauteuil roulant, matelas à air, verticalisateur, soulève-personne ou autre matériel.'],
+   ['🔎','Identification rapide','Numéro de série saisi ou lu par QR, Data Matrix, code-barres ou photo, avec réglages de caméra disponibles.'],
+   ['📍','Contexte','Client/établissement, foyer si applicable et nom du technicien ayant constaté le problème.'],
+   ['📝','Description et photos','Décrire l’anomalie et les risques éventuels ; ajouter jusqu’à cinq photos.'],
+   ['📤','Brouillon et file d’attente','Les champs sont conservés localement sur l’appareil et une file d’attente permet de suivre les signalements à envoyer. Les photos ne sont pas conservées après fermeture/rechargement.']
+  ],links:[['Ouvrir le formulaire anomalie','signaler-anomalie.html']]},
+  {eyebrow:'06 · MAINTENANCES',title:'Des fiches adaptées à chaque équipement',text:'Les applications reprennent les fiches de maintenance EuroMed correspondantes. Elles guident le technicien dans les contrôles visuels et fonctionnels, puis produisent une trace documentaire.',items:[
+   ['🛏️','Lit médicalisé · ENR08-V05','Contrôles, scan QR/Data Matrix/Code 128/EAN-13, certificat PDF, résultat conforme en vert et non conforme en rouge, niveau d’obsolescence et tournée multi-lits.'],
+   ['♿','Fauteuil roulant · ENR10-V03','Contrôles visuels et fonctionnels, scan par caméra ou photo, certificat PDF, aperçu avant envoi et tournée multi-fauteuils.'],
+   ['🛌','Matelas à air · ENR09-V02','Maintenance annuelle ou périodique, contrôles du système compresseur/matelas, observations, pièces remplacées, obsolescence et PDF.'],
+   ['🏥','Lève-personne · ENR11-V02','Contrôles de sécurité, saisie des numéros de sangles et décision de maintien en service : approuvé, approuvé sous réserve ou non approuvé.'],
+   ['🧍','Verticalisateur · ENR12-V02','Fiche dédiée aux contrôles visuels et fonctionnels, identification par scan et décision de maintien en service.'],
+   ['📄','Un résultat exploitable','Les fiches génèrent un PDF comprenant les résultats, observations et signatures, avec aperçu/téléchargement et envoi par e-mail via Google Apps Script.']
+  ],links:[
+   ['Lit médicalisé','https://hawaryou.github.io/maintenance-lit-medical/'],
+   ['Fauteuil roulant','https://hawaryou.github.io/maintenance-fauteuil-roulant/'],
+   ['Matelas à air','https://hawaryou.github.io/maintenance-matelas-alternating/'],
+   ['Lève-personne','https://hawaryou.github.io/maintenance-leve-personne/'],
+   ['Verticalisateur','https://hawaryou.github.io/maintenance-verticalisateur/']
+  ]},
+  {eyebrow:'07 · TOURNÉES MULTI-ÉQUIPEMENTS',title:'Une signature client pour toute la tournée',text:'Pour les maintenances compatibles, le mode multi-équipements permet de traiter plusieurs appareils dans une même tournée plutôt que de recommencer toute la procédure pour chacun.',items:[
+   ['1️⃣','Mode normal','Contrôler un équipement et produire son certificat individuellement.'],
+   ['➕','Mode tournée','Enregistrer chaque appareil l’un après l’autre puis passer au suivant.'],
+   ['✍️','Signature unique','À la fin de la tournée, le client signe une seule fois.'],
+   ['📚','Dossier PDF groupé','Les certificats de la tournée sont regroupés dans un seul PDF et peuvent être envoyés ensemble.'],
+   ['🟢🔴','Résultat lisible','Les statuts de conformité sont mis en évidence ; pour les fiches concernées, la propreté/aspect extérieur seule ne déclenche pas à elle seule la non-conformité globale.']
+  ]},
+  {eyebrow:'08 · CHECK-UPS & DOCUMENTATION',title:'Préparer, contrôler et retrouver les ressources',text:'Les check-ups hebdomadaires et la bibliothèque documentaire complètent les applications de maintenance et de traçabilité.',items:[
+   ['🚐','Check-up des camions','Liste de vérification du Crafter ou du Jumper : carrosserie, pneus, feux, niveaux, essuie-glaces, équipements et observations. Le formulaire comporte une progression de contrôle, une signature et une impression PDF.'],
+   ['🧰','Check-up des pièces détachées','Contrôle des quantités attendues, de la présence des pièces et consommables dans le camion, avec remarques sur les manquants.'],
+   ['📚','Notices et protocoles','Liste des PDF récupérée depuis GitHub ; actualisation, recherche, sélection multiple, lecture/aperçu, zoom et ouverture dans un nouvel onglet.'],
+   ['🎬','Vidéos utiles','Les vidéos de montage/démontage de lit sont proposées sous forme de liens dans l’e-mail, sans envoyer les vidéos comme fichiers.'],
+   ['✉️','Envoi documentaire','Saisie du destinataire, sélection des documents, confirmation avant envoi et transmission des PDF en pièces jointes via Apps Script.']
+  ],links:[
+   ['Démontrer le check-up camion','internal:checkupTruck'],
+   ['Démontrer le check-up pièces','internal:checkupParts'],
+   ['Ouvrir la documentation','https://hawaryou.github.io/envoi_pdf_euromed/']
+  ]},
+  {eyebrow:'09 · ARCHITECTURE & BONNES PRATIQUES',title:'Des applications web connectées entre elles',text:'Les interfaces sont hébergées sur GitHub Pages. Selon l’application, les données et les documents utilisent les services associés configurés pour le projet.',items:[
+   ['🌐','GitHub Pages','Hébergement des interfaces accessibles par un lien web, sans installation classique sur le poste.'],
+   ['📨','Google Apps Script','Utilisé par les formulaires concernés pour transmettre les PDF et les e-mails. Des scripts indépendants sont prévus pour les différents workflows.'],
+   ['📂','GitHub pour les notices','Les PDF documentaires sont chargés depuis le dépôt configuré ; ajouter un fichier au bon dossier permet de le faire apparaître dans la liste après actualisation.'],
+   ['🔒','Confidentialité','Avant une mise en production élargie, vérifier les destinataires, les droits d’accès, les durées de conservation et les informations de confidentialité. Ne pas placer de données patients/confidentielles dans un dépôt public.'],
+   ['🧪','Démo sans risque','Pendant la présentation, montrer les parcours et aperçus ; éviter de signer ou d’envoyer un vrai document si les données sont réelles.']
+  ]}
+ ];
+ let index=0;
+ const modal=document.createElement('div');modal.className='demo-modal';modal.id='demoModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Mode démonstration EuroMed');modal.hidden=true;
+ modal.innerHTML='<div class="demo-panel"><div class="demo-modal-top"><span class="demo-badge">▶ MODE DÉMONSTRATION</span><button class="demo-close" type="button" aria-label="Fermer la démonstration">✕</button></div><div class="demo-progress"><i></i></div><div class="demo-content"></div><div class="demo-footer"><button class="demo-prev" type="button">← Précédent</button><span class="demo-counter"></span><button class="demo-next" type="button">Suivant →</button></div><p class="demo-safety">Présentation guidée · Les liens ouvrent les applications réelles. Ne validez pas de document et n’envoyez pas de données pendant la présentation.</p></div>';
+ document.body.appendChild(modal);
+ const content=modal.querySelector('.demo-content');
+ function render(){
+  const s=slides[index];
+  const shortTitle=s.eyebrow.replace(/^\d+\s*[·.-]\s*/,'');
+  const dots=slides.map((item,i)=>'<button type="button" class="demo-step-dot'+(i===index?' is-active':'')+(i<index?' is-done':'')+'" data-demo-step="'+i+'" aria-label="Étape '+(i+1)+' : '+item.title.replace(/"/g,'&quot;')+'" title="'+item.title.replace(/"/g,'&quot;')+'"><span>'+(i<index?'✓':i+1)+'</span></button>').join('');
+  content.innerHTML=
+   '<div class="demo-slide-heading"><div class="demo-heading-copy"><span class="demo-eyebrow">'+shortTitle+'</span><h2>'+s.title+'</h2></div></div>'+
+   '<p class="demo-intro">'+s.text+'</p>'+
+   '<div class="demo-highlights"><span>📱 Adapté au mobile</span><span>🧭 Parcours guidé</span><span>🛠️ Outils EuroMed</span></div>'+
+   '<div class="demo-items">'+s.items.map((x,i)=>'<article class="demo-item" style="--demo-card-index:'+i+'"><span class="demo-item-icon">'+x[0]+'</span><div><b>'+x[1]+'</b><p>'+x[2]+'</p></div></article>').join('')+'</div>'+
+   (s.links?'<div class="demo-actions"><div class="demo-actions-title"><span>À VOIR EN DIRECT</span><small>Ouvrir une application dans un nouvel onglet</small></div><div class="demo-links">'+s.links.map(x=>'<button type="button" class="demo-link" data-demo-link="'+x[1]+'"><span>'+x[0]+'</span><b aria-hidden="true">↗</b></button>').join('')+'</div></div>':'')+
+   '<div class="demo-step-track" aria-label="Progression de la présentation">'+dots+'</div>';
+  modal.querySelector('.demo-counter').textContent='ÉTAPE '+String(index+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  modal.querySelector('.demo-progress i').style.width=((index+1)/slides.length*100)+'%';
+  modal.querySelector('.demo-prev').disabled=index===0;
+  modal.querySelector('.demo-next').textContent=index===slides.length-1?'Terminer la présentation ✓':'Étape suivante →';
+  const panel=modal.querySelector('.demo-panel');
+  panel.scrollTop=0;
+  if(typeof requestAnimationFrame==='function') requestAnimationFrame(()=>{panel.scrollTop=0;});
+ }
+ function open(){index=0;render();modal.hidden=false;document.body.classList.add('demo-open');modal.querySelector('.demo-next').focus();}
+ function close(){modal.hidden=true;document.body.classList.remove('demo-open');}
+ document.addEventListener('click',e=>{if(e.target.closest('#openDemoMode'))open();});
+ modal.querySelector('.demo-close').addEventListener('click',close);
+ modal.addEventListener('click',e=>{if(e.target===modal)close();});
+ modal.querySelector('.demo-prev').addEventListener('click',()=>{if(index>0){index--;render();}});
+ modal.querySelector('.demo-next').addEventListener('click',()=>{if(index<slides.length-1){index++;render();}else close();});
+ modal.addEventListener('click',e=>{
+  const step=e.target.closest('[data-demo-step]');
+  if(step){const n=Number(step.dataset.demoStep);if(Number.isInteger(n)&&n>=0&&n<slides.length){index=n;render();}return;}
+  const b=e.target.closest('[data-demo-link]');if(!b)return;
+  const dest=b.dataset.demoLink;
+  if(dest==='internal:maintenance'){close();showPage('maintenance');}
+  else if(dest==='internal:checkupTruck'){close();showPage('checkupTruck');}
+  else if(dest==='internal:checkupParts'){close();showPage('checkupParts');}
+  else {close();window.open(dest,'_blank','noopener');}
+ });
+ document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape')close();if(e.key==='ArrowRight')modal.querySelector('.demo-next').click();if(e.key==='ArrowLeft')modal.querySelector('.demo-prev').click();});
 })();
 </script>
 </body>

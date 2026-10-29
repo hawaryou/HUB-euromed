@@ -1,5 +1,5 @@
 /* EuroMed HUB — cache hors connexion v1 */
-const CACHE_NAME = "euromed-hub-offline-v1";
+const CACHE_NAME = "euromed-hub-offline-demo-v2";
 const BASE = self.registration.scope;
 const REMOTE_FILES = [
   "https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js",
@@ -12,8 +12,8 @@ const CORE_FILES = [
   BASE + "signaler-anomalie.html",
   BASE + "style.css",
   BASE + "manifest.json",
-  BASE + "assets/euromed-logo.png",
-  BASE + "assets/chibi-euromed.png"
+  BASE + "euromed-logo.png",
+  BASE + "chibi-euromed.png"
 ];
 
 self.addEventListener("install", event => {
