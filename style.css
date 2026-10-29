@@ -208,3 +208,11 @@ html[data-theme="light"] body::before{
  animation-duration:16s;opacity:1;
 }
 @media(prefers-reduced-motion:reduce){body::before{animation:none!important}}
+
+
+/* Bulles visibles dans la zone centrale du HUB, pas seulement autour de l'application */
+.app-shell{isolation:isolate!important;background:transparent!important;position:relative}
+.app-shell::before{content:"";position:absolute;inset:-22%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 12% 18%,rgba(34,211,238,.30) 0 19px,rgba(34,211,238,.11) 20px 44px,transparent 78px),radial-gradient(circle at 80% 20%,rgba(167,139,250,.30) 0 15px,rgba(167,139,250,.11) 16px 42px,transparent 80px),radial-gradient(circle at 27% 72%,rgba(244,114,182,.23) 0 23px,rgba(244,114,182,.09) 24px 48px,transparent 84px),radial-gradient(circle at 84% 80%,rgba(52,211,153,.23) 0 17px,rgba(52,211,153,.09) 18px 40px,transparent 78px),linear-gradient(135deg,#07152b,#11284b 55%,#21183c);animation:euromed-bubbles-drift 17s ease-in-out infinite alternate;will-change:transform,background-position}
+.app-content{background:transparent!important;background-image:none!important}
+html[data-theme="light"] .app-shell::before{background:radial-gradient(circle at 12% 18%,rgba(14,165,233,.42) 0 21px,rgba(56,189,248,.20) 22px 48px,transparent 84px),radial-gradient(circle at 80% 20%,rgba(139,92,246,.38) 0 17px,rgba(196,181,253,.23) 18px 44px,transparent 84px),radial-gradient(circle at 27% 72%,rgba(236,72,153,.32) 0 25px,rgba(251,207,232,.22) 26px 52px,transparent 92px),radial-gradient(circle at 84% 80%,rgba(16,185,129,.31) 0 19px,rgba(167,243,208,.22) 20px 44px,transparent 86px),linear-gradient(135deg,#dff6ff,#fff1f8 55%,#eee7ff);animation-duration:15s}
+@media(prefers-reduced-motion:reduce){.app-shell::before{animation:none!important}}
