@@ -191,7 +191,7 @@ $('confirmSend').addEventListener('click',async()=>{
   btn.disabled=false;btn.textContent='↻ Réessayer';
  }finally{sending=false;queueRefresh()}
 });
-window.addEventListener('online',async()=>{try{const items=await queueAll();for(const item of items){if(item.state==='pending')await sendQueued(item.id)}}catch(e){}});
+/* TEST ISOLE : la reprise automatique des éléments hors ligne est temporairement désactivée. */
 queueRefresh();
 </script>
 <script>
