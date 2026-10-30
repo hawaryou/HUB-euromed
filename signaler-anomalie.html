@@ -34,7 +34,7 @@
 <label class="field"><span>Technicien ayant fait le constat *</span><input id="technician" required placeholder="Nom et prénom du technicien"></label>
 <label class="field"><span>Description de l’anomalie *</span><textarea id="description" required placeholder="Décrivez le défaut, les circonstances et les éventuels risques…"></textarea></label>
 <label class="field"><span>Photos (facultatif, jusqu’à 5)</span><input id="photos" type="file" accept="image/*" multiple><div class="hint">Sélectionnez plusieurs images dans la photothèque si nécessaire. Pour prendre une photo, utilisez l’appareil photo puis revenez sélectionner les images.</div><div id="preview"></div></label>
-<label class="field"><span>Vidéos de l’anomalie (facultatif, jusqu’à 2 vidéos de 20 secondes)</span><input id="videos" type="file" accept="video/*" multiple><div class="hint">Sélectionnez une ou deux vidéos dans la photothèque. Pour filmer, utilisez l’appareil photo puis revenez sélectionner la vidéo. 10 Mo maximum par vidéo ; chaque vidéo sera envoyée dans un courriel séparé.</div><div id="videoPreview"></div></label>
+<label class="field"><span>Vidéos de l’anomalie (facultatif, jusqu’à 2 vidéos de 20 secondes)</span><input id="videos" type="file" accept="video/*" multiple><div class="hint">Sélectionnez une ou deux vidéos dans la photothèque. Pour filmer, utilisez l’appareil photo puis revenez sélectionner la vidéo. 10 Mo maximum par vidéo. Les photos et vidéos seront regroupées dans un seul courriel lorsque la taille totale le permet ; au-delà, l’envoi sera réparti en plusieurs courriels.</div><div id="videoPreview"></div></label>
 </section>
 <div class="notice">Avant l’envoi, vérifiez le numéro de série et la description. Si le dispositif présente un danger, appliquez les consignes de sécurité internes et mettez-le hors service si nécessaire.</div>
 <button class="btn submit" type="button" id="prepareReport">✉️ Envoyer la demande d’intervention</button>
@@ -44,7 +44,7 @@
 </div>
 <script>
 const $=id=>document.getElementById(id);
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxVAYokKK4TxrwfSK1Q5-EQx7medXr3_6pjJKJnXrsvDRy3TPQRwRiLZ5pqqJ7S28vEvg/exec';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwH79uSefNGJyeKze-C9ofKptMcUMlz9HemMM3FDLAHvdmupoBNhdjtEKWmqquaM7QmWQ/exec';
 let scanner=null, pendingData=null, sending=false;
 function updateConditionalFields(){
   const isOther=$('device').value==='Autre';
@@ -161,7 +161,7 @@ $('prepareReport').addEventListener('click',async()=>{
   }
   pendingData=buildReport();
   $('emailPreviewText').textContent=reportText(pendingData);
-  $('emailPreviewPhotos').textContent=(files.length?'Photos : '+files.length+' · '+(total/1024/1024).toFixed(2)+' Mo. ':'Aucune photo. ')+(videoFiles.length?'Vidéos : '+videoFiles.length+' · '+(videoFiles.reduce((a,f)=>a+f.size,0)/1024/1024).toFixed(2)+' Mo. Envoi séparé prévu.':'Aucune vidéo.');
+  $('emailPreviewPhotos').textContent=(files.length?'Photos : '+files.length+' · '+(total/1024/1024).toFixed(2)+' Mo. ':'Aucune photo. ')+(videoFiles.length?'Vidéos : '+videoFiles.length+' · '+(videoFiles.reduce((a,f)=>a+f.size,0)/1024/1024).toFixed(2)+' Mo. Regroupement automatique des pièces jointes selon leur taille.':'Aucune vidéo.');
   $('emailPreview').style.display='block';
   status.style.display='none';
   $('emailPreview').scrollIntoView({behavior:'smooth',block:'start'});
