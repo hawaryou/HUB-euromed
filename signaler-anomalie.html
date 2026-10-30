@@ -119,7 +119,7 @@ function reportText(d){
  '\n\nPhotos jointes : '+(d.photos.length?d.photos.map(f=>f.name).join(', '):'Aucune')+
  '\nVidéos jointes : '+(d.videos.length?d.videos.map(f=>f.name).join(', '):'Aucune');
 }
-$('form').addEventListener('submit',e=>{
+$('form').addEventListener('submit',async e=>{
  e.preventDefault();
  updateConditionalFields();
  if(!$('form').reportValidity())return;
@@ -131,6 +131,7 @@ $('form').addEventListener('submit',e=>{
  const total=files.reduce((sum,f)=>sum+f.size,0);
  if(total>8*1024*1024){alert('Le total des photos ne doit pas dépasser 8 Mo.');return}
  if(videoFiles.some(f=>!f.type.startsWith('video/')||f.size>10*1024*1024)){alert('Chaque vidéo doit faire 10 Mo maximum.');return}
+ for(const f of videoFiles){try{const u=URL.createObjectURL(f);const d=await getVideoDuration(u);URL.revokeObjectURL(u);if(d>20.5){alert('Chaque vidéo doit durer 20 secondes maximum.');return}}catch(err){alert('Impossible de vérifier la durée d’une vidéo.');return}}
  pendingData=buildReport();
  $('emailPreviewText').textContent=reportText(pendingData);
  $('emailPreviewPhotos').textContent=(files.length?'Photos : '+files.length+' · '+(total/1024/1024).toFixed(2)+' Mo. ':'Aucune photo. ')+(videoFiles.length?'Vidéos : '+videoFiles.length+' · '+(videoFiles.reduce((a,f)=>a+f.size,0)/1024/1024).toFixed(2)+' Mo. Envoi séparé prévu.':'Aucune vidéo.');
