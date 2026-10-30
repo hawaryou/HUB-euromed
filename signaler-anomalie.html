@@ -78,21 +78,39 @@ $('photos').addEventListener('change',()=>{
   if(files.length>5){alert('Sélectionnez au maximum 5 photos.');$('photos').value='';return}
   files.forEach(f=>{if(!f.type.startsWith('image/'))return;const img=document.createElement('img');img.alt=f.name;img.src=URL.createObjectURL(f);$('preview').append(img)})
 });
+// Les vidéos sont cumulées dans cette liste : choisir une nouvelle vidéo ne remplace plus les précédentes.
+const selectedVideos=[];
+function renderSelectedVideos(){
+ const host=$('videoPreview');host.innerHTML='';
+ selectedVideos.forEach((item,index)=>{
+  const card=document.createElement('div');card.className='video-card';
+  const video=document.createElement('video');video.src=item.url;video.controls=true;video.playsInline=true;
+  const label=document.createElement('small');label.textContent=item.file.name+' · '+item.duration.toFixed(1)+' s · '+(item.file.size/1024/1024).toFixed(1)+' Mo';
+  const remove=document.createElement('button');remove.type='button';remove.className='btn secondary';remove.style.marginTop='8px';remove.textContent='Retirer cette vidéo';
+  remove.addEventListener('click',()=>{URL.revokeObjectURL(item.url);selectedVideos.splice(index,1);renderSelectedVideos()});
+  card.append(video,label,remove);host.append(card);
+ });
+ if(selectedVideos.length===0)host.textContent='Aucune vidéo sélectionnée.';
+}
 $('videos').addEventListener('change',async()=>{
-  const files=[...$('videos').files];$('videoPreview').innerHTML='';
-  if(files.length>2){alert('Sélectionnez au maximum 2 vidéos.');$('videos').value='';return}
-  for(const f of files){
-    if(!f.type.startsWith('video/')||f.size>10*1024*1024){alert('Chaque vidéo doit faire 10 Mo maximum.');$('videos').value='';$('videoPreview').innerHTML='';return}
-    const url=URL.createObjectURL(f);
-    try{
-      const duration=await getVideoDuration(url);
-      if(duration>20.5){alert('Chaque vidéo doit durer 20 secondes maximum.');$('videos').value='';$('videoPreview').innerHTML='';return}
-      const card=document.createElement('div');card.className='video-card';
-      const video=document.createElement('video');video.src=url;video.controls=true;video.playsInline=true;
-      const label=document.createElement('small');label.textContent=f.name+' · '+duration.toFixed(1)+' s · '+(f.size/1024/1024).toFixed(1)+' Mo';
-      card.append(video,label);$('videoPreview').append(card);
-    }catch(e){alert('Impossible de lire cette vidéo. Choisissez un fichier compatible.');$('videos').value='';$('videoPreview').innerHTML='';return}
+ const incoming=[...$('videos').files];$('videos').value='';
+ if(selectedVideos.length+incoming.length>2){alert('Maximum 2 vidéos au total. La sélection précédente est conservée.');return}
+ const additions=[];
+ try{
+  for(const f of incoming){
+   if(!f.type.startsWith('video/')||f.size>10*1024*1024)throw new Error('Chaque vidéo doit être au format vidéo et faire 10 Mo maximum.');
+   const url=URL.createObjectURL(f);
+   try{
+    const duration=await getVideoDuration(url);
+    if(duration>20.5)throw new Error('Chaque vidéo doit durer 20 secondes maximum.');
+    additions.push({file:f,url,duration});
+   }catch(e){URL.revokeObjectURL(url);throw e}
   }
+  selectedVideos.push(...additions);renderSelectedVideos();
+ }catch(e){
+  additions.forEach(item=>URL.revokeObjectURL(item.url));
+  alert(e.message==='metadata'?'Impossible de lire cette vidéo. Choisissez un fichier compatible.':e.message);
+ }
 });
 function getVideoDuration(url){return new Promise((resolve,reject)=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>resolve(v.duration);v.onerror=()=>reject(new Error('metadata'));v.src=url})}
 function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({nom:file.name,type:file.type,base64:String(reader.result).split(',')[1]});reader.onerror=()=>reject(reader.error||new Error('Lecture du fichier impossible'));reader.readAsDataURL(file)})}
@@ -108,7 +126,7 @@ function buildReport(){
   dateConstat:new Date().toLocaleString('fr-FR'),
   destinataire:'valentineuromed@gmail.com',
   photos:[...$('photos').files],
-  videos:[...$('videos').files]
+  videos:selectedVideos.map(item=>item.file)
  };
 }
 function reportText(d){
@@ -129,7 +147,7 @@ $('prepareReport').addEventListener('click',async()=>{
   updateConditionalFields();
   if(!$('form').reportValidity()){status.style.display='none';return}
   const files=[...$('photos').files];
-  const videoFiles=[...$('videos').files];
+  const videoFiles=selectedVideos.map(item=>item.file);
   if(videoFiles.length>2)throw new Error('Sélectionnez au maximum 2 vidéos.');
   if(files.length>5)throw new Error('Sélectionnez au maximum 5 photos.');
   if(files.some(f=>f.size>4*1024*1024))throw new Error('Chaque photo doit faire 4 Mo maximum.');
