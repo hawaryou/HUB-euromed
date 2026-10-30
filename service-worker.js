@@ -1,5 +1,5 @@
 /* EuroMed HUB — cache hors connexion v1 */
-const CACHE_NAME = "euromed-hub-offline-demo-v6";
+const CACHE_NAME = "euromed-hub-offline-demo-v7";
 const BASE = self.registration.scope;
 const REMOTE_FILES = [
   "https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js",
@@ -10,6 +10,7 @@ const CORE_FILES = [
   BASE,
   BASE + "index.html",
   BASE + "signaler-anomalie.html",
+  BASE + "faire-demande.html",
   BASE + "style.css",
   BASE + "manifest.json",
   BASE + "euromed-logo.png",
@@ -60,7 +61,7 @@ self.addEventListener("fetch", event => {
       } catch (error) {
         const cached = await caches.match(request);
         if (cached) return cached;
-        const path = url.pathname.endsWith("/signaler-anomalie.html") ? "signaler-anomalie.html" : "index.html";
+        const path = url.pathname.endsWith("/signaler-anomalie.html") ? "signaler-anomalie.html" : url.pathname.endsWith("/faire-demande.html") ? "faire-demande.html" : "index.html";
         return (await caches.match(BASE + path)) || new Response("Cette page n'a pas encore été préparée pour le mode hors connexion. Reconnectez-vous et ouvrez-la une fois.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
       }
     })());
