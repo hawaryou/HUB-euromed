@@ -9,9 +9,9 @@
 :root{color-scheme:dark;--bg:#06152b;--panel:#102544;--line:#24476e;--cyan:#55d9ff;--muted:#a9bdd6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#173a68 0,transparent 35%),var(--bg);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#f5f8ff;padding:18px 14px 40px}.wrap{max-width:760px;margin:auto}.back{display:inline-flex;padding:12px 16px;border-radius:14px;background:linear-gradient(135deg,#1687df,#5148d9);color:white;text-decoration:none;font-weight:800;box-shadow:0 6px 18px #0005}.hero{padding:22px 4px 12px}.eyebrow{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:2px}h1{font-size:clamp(28px,6vw,40px);line-height:1.08;margin:8px 0}p{color:var(--muted);line-height:1.5}.panel{background:linear-gradient(145deg,#112b4c,#0b1c35);border:1px solid var(--line);border-radius:22px;padding:18px;margin:14px 0;box-shadow:0 14px 34px #0003}.panel h2{font-size:16px;margin:0 0 16px}.field{display:block;margin:14px 0}.field>span{display:block;font-size:13px;font-weight:750;margin-bottom:7px;color:#dbeaff}input,select,textarea{width:100%;min-height:48px;padding:12px;border:1px solid #315477;border-radius:12px;background:#07182d;color:#fff;font:inherit}textarea{min-height:120px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 14px;min-height:46px;background:#1c5c9e;color:white;font-weight:800;cursor:pointer}.btn.secondary{background:#263b56}.btn.submit{width:100%;background:linear-gradient(120deg,#00a9dc,#5865e9);font-size:16px;margin-top:8px}.hint{font-size:12px;color:var(--muted)}#preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:10px}#preview img{width:100%;height:95px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}#videoPreview{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}.video-card{background:#07182d;border:1px solid #315477;border-radius:12px;padding:8px}.video-card video{display:block;width:100%;max-height:180px;background:#000;border-radius:8px}.video-card small{display:block;color:var(--muted);overflow-wrap:anywhere;margin-top:6px}#reader{width:100%;overflow:hidden;border-radius:12px;margin-top:12px}#scanner{display:none}#status{padding:12px;border-radius:12px;margin-top:12px;display:none;white-space:pre-wrap}.notice{background:#3a2c12;border:1px solid #88672d;color:#ffe8a6;padding:12px;border-radius:12px;font-size:13px}@media(max-width:520px){.row{grid-template-columns:1fr}.panel{padding:15px}}
 [hidden]{display:none!important}#emailPreview{display:none}#emailPreview pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;color:#eaf4ff;background:#07182d;border:1px solid #315477;border-radius:12px;padding:14px}#emailPreview .preview-actions{display:flex;gap:10px;flex-wrap:wrap}#emailPreview .preview-actions .btn{flex:1}\n</style>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script>window.__zbarPolyfillReady=import('https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.23/dist/main.js').then(m=>m.BarcodeDetectorPolyfill).catch(()=>null);</script>
+<script>window.__zbarPolyfillReady=import('https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.23/dist/main.js').then(m=>{window.BarcodeDetectorPolyfill=m.BarcodeDetectorPolyfill;return m.BarcodeDetectorPolyfill}).catch(error=>{console.error('Chargement ZBar/WebAssembly impossible :',error);window.__zbarPolyfillError=error;throw error});</script>
 <script src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
-<style>.scan-actions,.scanner-tools{display:flex;gap:8px;flex-wrap:wrap}.scan-actions .btn,.scanner-tools .btn{flex:1;min-width:110px}.scanner{display:none;margin-top:12px;padding:10px;background:#000;border-radius:14px;overflow:hidden}.scanner-title{color:#fff;text-align:center;font-weight:800;margin:4px 0 8px}.scanner .hint{color:#ddd;text-align:center}@media(max-width:520px){.scan-actions{display:grid;grid-template-columns:1fr}.scan-actions .btn,.scanner-tools .btn{min-height:44px}}</style></head><body><div class="wrap">
+<style>.scan-actions,.scanner-tools{display:flex;gap:8px;flex-wrap:wrap}.scan-actions .btn,.scanner-tools .btn{flex:1;min-width:110px}.scanner{display:none;margin-top:12px;padding:10px;background:#000;border-radius:14px;overflow:hidden}.scanner-title{color:#fff;text-align:center;font-weight:800;margin:4px 0 8px}.scanner .hint{color:#ddd;text-align:center}.reader{position:relative;width:100%;overflow:hidden;border-radius:8px}.barcode-reader{position:relative;background:#000;min-height:220px}.barcode-reader:after{content:'';position:absolute;left:3%;right:3%;top:42%;height:26%;border:3px solid rgba(255,255,255,.9);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scan-overlay-2d{position:absolute;left:50%;top:50%;width:62%;aspect-ratio:1;transform:translate(-50%,-50%);border:3px solid rgba(255,255,255,.9);border-radius:10px;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;z-index:3}.scan-overlay-2d span{background:rgba(0,0,0,.65);color:#fff;padding:5px 9px;border-radius:6px;font-size:13px;font-weight:700}@media(max-width:520px){.scan-actions{display:grid;grid-template-columns:1fr}.scan-actions .btn,.scanner-tools .btn{min-height:44px}}</style></head><body><div class="wrap">
 <a class="back" href="https://hawaryou.github.io/HUB-euromed/">‹ Retour au Hub EuroMed</a>
 <header class="hero"><div class="eyebrow">HUB TECHNICIEN · QUALITÉ & SÉCURITÉ</div><h1>⚠️ Signaler une anomalie</h1><p>Décrivez le problème constaté sur un dispositif médical pour préparer une demande d’intervention EuroMed.</p></header>
 <form id="form">
@@ -60,19 +60,160 @@ $('device').addEventListener('change',updateConditionalFields);
 $('foyerToggle').addEventListener('change',updateConditionalFields);
 updateConditionalFields();
 
-let activeStream=null, activeVideo=null, activeTimer=null, activeMode='qr', activeTrack=null;
-function stopScan(){if(activeTimer)clearInterval(activeTimer);activeTimer=null;if(activeStream)activeStream.getTracks().forEach(t=>t.stop());activeStream=null;activeTrack=null;if(activeVideo){activeVideo.srcObject=null;activeVideo=null}$('scanner').style.display='none';$('qrStart').hidden=false;$('barcodeStart').hidden=false}
-async function setCameraZoom(v){if(!activeTrack?.getCapabilities)return;try{const c=activeTrack.getCapabilities();if(c.zoom)await activeTrack.applyConstraints({advanced:[{zoom:Math.max(c.zoom.min||1,Math.min(c.zoom.max||v,v))}]})}catch(e){}}
-async function setCameraFocus(){if(!activeTrack?.getCapabilities)return;try{const c=activeTrack.getCapabilities();if(c.focusMode)await activeTrack.applyConstraints({advanced:[{focusMode:c.focusMode.includes('continuous')?'continuous':'single-shot'}]})}catch(e){}}
-async function startScan(mode){stopScan();activeMode=mode;if(location.protocol!=='https:'&&location.hostname!=='localhost'){alert('La caméra nécessite une page HTTPS.');return}
-$('scanner').style.display='block';$('reader').innerHTML='';$('scannerTitle').textContent=mode==='qr'?'Scanner le QR Code — mode précis':'Scanner le code-barres — mode renforcé iPhone';$('qrStart').hidden=true;$('barcodeStart').hidden=true;
-const video=document.createElement('video');video.autoplay=true;video.muted=true;video.playsInline=true;video.setAttribute('playsinline','');video.style.cssText='width:100%;display:block;object-fit:cover;aspect-ratio:4/3';$('reader').append(video);activeVideo=video;
-try{activeStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440}},audio:false});video.srcObject=activeStream;activeTrack=activeStream.getVideoTracks()[0];await video.play();await new Promise(r=>setTimeout(r,500));
-let last='',hits=0,busy=false;const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
-activeTimer=setInterval(async()=>{if(busy||!video.videoWidth)return;busy=true;try{let text='',fmt='';if(mode==='barcode'){const P=await window.__zbarPolyfillReady;if(P){const det=new P({formats:['code_128','ean_13']});const w=video.videoWidth,h=video.videoHeight,ch=Math.round(h*.3);canvas.width=w;canvas.height=ch;ctx.drawImage(video,0,Math.round((h-ch)/2),w,ch,0,0,w,ch);const found=await det.detect(canvas);if(found?.length){text=found[0].rawValue;fmt=found[0].format}}}else if(window.ZXingWASM?.readBarcodes){canvas.width=video.videoWidth;canvas.height=video.videoHeight;ctx.drawImage(video,0,0,canvas.width,canvas.height);const data=ctx.getImageData(0,0,canvas.width,canvas.height);const found=await window.ZXingWASM.readBarcodes(data,{tryHarder:true,formats:['QRCode','DataMatrix'],maxNumberOfSymbols:1});if(found?.length){text=found[0].text;fmt=found[0].format}}if(text){if(text===last)hits++;else{last=text;hits=1}if(hits>=2){$('serial').value=text;stopScan();$('status').style.display='block';$('status').textContent='Code détecté ('+fmt+') : '+text}}}catch(e){}finally{busy=false}},140);
-}catch(e){alert('Impossible de démarrer le scanner. Vérifiez l’autorisation caméra et réessayez.');stopScan()}}
-$('qrStart').addEventListener('click',()=>startScan('qr'));$('barcodeStart').addEventListener('click',()=>startScan('barcode'));$('qrStop').addEventListener('click',stopScan);$('photoStart').addEventListener('click',()=>$('scanPhotoInput').click());
-$('scanPhotoInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const scanner=new Html5Qrcode('reader');const text=await scanner.scanFile(f,true);$('serial').value=text;$('status').style.display='block';$('status').textContent='Code détecté sur la photo : '+text;await scanner.clear()}catch(err){alert('Aucun code lisible sur la photo.')}finally{e.target.value=''}});
+// Lecteur repris du dépôt maintenance-lit-medical : ZBar pour les codes 1D, ZXing pour QR/Data Matrix.
+let activeScanner=null, activeScannerType=null, activeField=null;
+function showScannerMessage(message,kind='info'){
+ const s=$('status');s.style.display='block';s.style.background=kind==='error'?'#4b2028':kind==='success'?'#173b2b':'#17324c';s.textContent=message;
+}
+function setScanValue(field,text,format){
+ const el=$(field);if(!el)return;
+ el.value=String(text||'').trim();
+ showScannerMessage('Code détecté ('+format+') : '+el.value,'success');
+}
+async function startScanner(field,mode='qr'){
+ if(activeScanner)await stopScanner(activeField);
+ activeField=field;
+ const box=$('scanner'),reader=$('reader');
+ if(!box||!reader)return;
+ box.style.display='block';reader.innerHTML='';
+ if(location.protocol!=='https:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+  showScannerMessage('La caméra nécessite une page HTTPS. Ouvrez le HUB avec https://.','error');box.style.display='none';activeField=null;return;
+ }
+ const isQr=mode==='qr';
+ $('scannerTitle').textContent=isQr?'Scanner le QR Code — mode précis':'Scanner le code-barres — mode renforcé iPhone';
+ if(!isQr){
+  try{
+   const Polyfill=await window.__zbarPolyfillReady;
+   if(!Polyfill)throw new Error('BarcodeDetectorPolyfill indisponible');
+   reader.className='reader barcode-reader';
+   const video=document.createElement('video');video.autoplay=true;video.muted=true;video.playsInline=true;
+   video.setAttribute('playsinline','true');video.setAttribute('webkit-playsinline','true');
+   video.style.width='100%';video.style.display='block';video.style.objectFit='cover';video.style.aspectRatio='16/9';
+   reader.appendChild(video);
+   let stream;
+   try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30,max:30}},audio:false});}
+   catch(e){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});}
+   video.srcObject=stream;await video.play();await new Promise(r=>setTimeout(r,500));
+   if(!video.videoWidth)throw new Error('Le flux caméra ne fournit aucune image vidéo.');
+   const detector=new Polyfill({formats:['code_128','ean_13']});
+   const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+   let last='',confirmations=0,lastAt=0,finished=false,running=true,detecting=false,timer=null;
+   function regions(){
+    const vw=video.videoWidth,vh=video.videoHeight,cw=Math.round(vw*.96),ch=Math.round(vh*.28),maxY=Math.max(0,vh-ch);
+    return [0.32,.42,.50,.58,.68].map(c=>({sx:Math.round((vw-cw)/2),sy:Math.round(Math.min(maxY,Math.max(0,vh*c-ch/2))),cropW:cw,cropH:ch}));
+   }
+   function accept(text,format){
+    if(!text||finished)return false;text=String(text).trim();const now=Date.now();
+    if(text===last&&now-lastAt<2200)confirmations++;else{last=text;confirmations=1}
+    lastAt=now;if(confirmations<2)return false;
+    finished=true;setScanValue(field,text,String(format).toUpperCase().replace('_','-'));stopScanner(field);return true;
+   }
+   async function detect(){
+    if(!running||finished||detecting||!video.videoWidth)return;detecting=true;
+    try{
+     for(const r of regions()){
+      if(!running||finished)break;
+      if(canvas.width!==r.cropW||canvas.height!==r.cropH){canvas.width=r.cropW;canvas.height=r.cropH}
+      ctx.clearRect(0,0,r.cropW,r.cropH);ctx.drawImage(video,r.sx,r.sy,r.cropW,r.cropH,0,0,r.cropW,r.cropH);
+      const codes=await detector.detect(canvas);
+      if(codes&&codes.length){let ok=false;for(const c of codes){if((c.format==='code_128'||c.format==='ean_13')&&accept(c.rawValue,c.format)){ok=true;break}}if(ok)break}
+     }
+    }catch(e){console.warn('Lecture code-barres :',e)}finally{detecting=false}
+   }
+   activeScanner={stream,video,timer:null,running:()=>{running=false}};
+   activeScannerType='zbar';timer=setInterval(detect,110);activeScanner.timer=timer;await detect();
+   setTimeout(()=>{if(activeScanner&&activeScanner.video===video)setCameraFocus()},600);
+  }catch(e){
+   console.error(e);showScannerMessage("Impossible d'utiliser le moteur Code 128 / EAN-13."+(e?.message?' ('+e.message+')':''),'error');
+   box.style.display='none';activeScanner=null;activeScannerType=null;activeField=null;
+  }
+  return;
+ }
+ try{
+  if(!window.ZXingWASM||typeof window.ZXingWASM.readBarcodes!=='function')throw new Error('Le moteur ZXing WebAssembly n’est pas chargé.');
+  reader.className='reader';reader.innerHTML='';
+  const video=document.createElement('video');video.autoplay=true;video.muted=true;video.playsInline=true;
+  video.setAttribute('playsinline','true');video.setAttribute('webkit-playsinline','true');
+  video.style.width='100%';video.style.display='block';video.style.objectFit='cover';video.style.aspectRatio='4/3';reader.appendChild(video);
+  const overlay=document.createElement('div');overlay.className='scan-overlay-2d';overlay.innerHTML='<span>QR / Data Matrix</span>';reader.appendChild(overlay);
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1440},frameRate:{ideal:30,max:30}},audio:false});}
+  catch(e){stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});}
+  video.srcObject=stream;await video.play();await new Promise(r=>setTimeout(r,700));
+  if(!video.videoWidth)throw new Error('Le flux caméra ne fournit aucune image vidéo.');
+  let running=true,detecting=false,finished=false,timer=null,last='',confirmations=0,lastAt=0;
+  const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+  function regions(){
+   const vw=video.videoWidth,vh=video.videoHeight;
+   return [{w:.92,h:.92,cx:.5,cy:.5},{w:.78,h:.78,cx:.5,cy:.5},{w:.62,h:.62,cx:.5,cy:.48},{w:.5,h:.5,cx:.5,cy:.46},{w:.42,h:.42,cx:.5,cy:.46}].map(r=>{
+    const cw=Math.max(320,Math.round(vw*r.w)),ch=Math.max(320,Math.round(vh*r.h));
+    return{sx:Math.max(0,Math.round(vw*r.cx-cw/2)),sy:Math.max(0,Math.round(vh*r.cy-ch/2)),cropW:Math.min(cw,vw),cropH:Math.min(ch,vh)}
+   });
+  }
+  async function accept(text,format){
+   if(!text||finished)return false;text=String(text).trim();const now=Date.now();
+   if(text===last&&now-lastAt<2500)confirmations++;else{last=text;confirmations=1}
+   lastAt=now;if(confirmations<2)return false;finished=true;
+   const fmt=format==='DataMatrix'?'Data Matrix':format==='QRCode'?'QR Code':String(format||'Code 2D');
+   setScanValue(field,text,fmt);await stopScanner(field);return true;
+  }
+  async function detect(){
+   if(!running||finished||detecting||!video.videoWidth)return;detecting=true;
+   try{
+    for(const r of regions()){
+     if(!running||finished)break;
+     if(canvas.width!==r.cropW||canvas.height!==r.cropH){canvas.width=r.cropW;canvas.height=r.cropH}
+     ctx.drawImage(video,r.sx,r.sy,r.cropW,r.cropH,0,0,r.cropW,r.cropH);
+     const data=ctx.getImageData(0,0,canvas.width,canvas.height);
+     const results=await window.ZXingWASM.readBarcodes(data,{tryHarder:true,formats:['QRCode','DataMatrix'],maxNumberOfSymbols:1});
+     if(results?.length){for(const result of results){const format=result.format||result.symbology||'';if((format==='DataMatrix'||format==='QRCode')&&await accept(result.text,format))break}}
+    }
+   }catch(e){console.warn('Lecture QR/Data Matrix :',e)}finally{detecting=false}
+  }
+  activeScanner={stream,video,timer:null,running:()=>{running=false}};
+  activeScannerType='zxing2d';timer=setInterval(detect,140);activeScanner.timer=timer;await detect();
+  setTimeout(()=>{if(activeScanner&&activeScanner.video===video)setCameraFocus()},700);
+ }catch(e){
+  console.error(e);showScannerMessage("Impossible d'utiliser le lecteur QR / Data Matrix."+(e?.message?' ('+e.message+')':''),'error');
+  box.style.display='none';activeScanner=null;activeScannerType=null;activeField=null;
+ }
+}
+function choosePhoto(field){$('scanPhotoInput').click()}
+async function scanPhoto(field,input){
+ if(!input.files?.[0])return;showScannerMessage('Analyse de la photo en cours…');
+ let photoScanner=null;
+ try{photoScanner=new Html5Qrcode('reader');const text=await photoScanner.scanFile(input.files[0],true);setScanValue(field,text.trim(),'Photo / code-barres');}
+ catch(e){console.error(e);showScannerMessage('Aucun code lisible sur la photo.','error');}
+ finally{if(photoScanner){try{await photoScanner.clear()}catch(e){}}input.value='';}
+}
+function getActiveVideoTrack(){return activeScanner?.stream?.getVideoTracks?.()[0]||null}
+async function setCameraZoom(value){
+ const track=getActiveVideoTrack();if(!track?.getCapabilities)return;
+ try{const caps=track.getCapabilities();if(!('zoom'in caps)){showScannerMessage("Le zoom matériel n'est pas disponible sur cette caméra.");return}
+ const min=Number.isFinite(caps.zoom.min)?caps.zoom.min:1,max=Number.isFinite(caps.zoom.max)?caps.zoom.max:value;
+ await track.applyConstraints({advanced:[{zoom:Math.max(min,Math.min(max,Number(value)))}]});
+ }catch(e){}
+}
+async function setCameraFocus(){
+ const track=getActiveVideoTrack();if(!track?.getCapabilities)return;
+ try{const caps=track.getCapabilities(),advanced={};
+ if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('continuous'))advanced.focusMode='continuous';
+ else if(Array.isArray(caps.focusMode)&&caps.focusMode.includes('single-shot'))advanced.focusMode='single-shot';
+ if(Object.keys(advanced).length)await track.applyConstraints({advanced:[advanced]});
+ }catch(e){}
+}
+async function stopScanner(field){
+ const box=$('scanner'),s=activeScanner;activeScanner=null;activeScannerType=null;activeField=null;
+ if(!s){if(box)box.style.display='none';return}
+ try{if(s.timer)clearInterval(s.timer);if(s.running)s.running();if(s.stream)s.stream.getTracks().forEach(x=>x.stop());if(s.video){try{s.video.pause()}catch(e){}s.video.srcObject=null}}catch(e){}
+ if(box)box.style.display='none';
+}
+$('qrStart').addEventListener('click',()=>startScanner('serial','qr'));
+$('barcodeStart').addEventListener('click',()=>startScanner('serial','barcode'));
+$('qrStop').addEventListener('click',()=>stopScanner('serial'));
+$('photoStart').addEventListener('click',()=>choosePhoto('serial'));
+$('scanPhotoInput').addEventListener('change',e=>scanPhoto('serial',e.target));
+
 $('photos').addEventListener('change',()=>{
   const files=[...$('photos').files];$('preview').innerHTML='';
   if(files.length>5){alert('Sélectionnez au maximum 5 photos.');$('photos').value='';return}
