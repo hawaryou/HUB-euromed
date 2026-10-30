@@ -37,7 +37,7 @@
 <label class="field"><span>Vidéos de l’anomalie (facultatif, jusqu’à 2 vidéos de 20 secondes)</span><input id="videos" type="file" accept="video/*" multiple><div class="hint">Sélectionnez une ou deux vidéos dans la photothèque. Pour filmer, utilisez l’appareil photo puis revenez sélectionner la vidéo. 10 Mo maximum par vidéo ; chaque vidéo sera envoyée dans un courriel séparé.</div><div id="videoPreview"></div></label>
 </section>
 <div class="notice">Avant l’envoi, vérifiez le numéro de série et la description. Si le dispositif présente un danger, appliquez les consignes de sécurité internes et mettez-le hors service si nécessaire.</div>
-<button class="btn submit" type="submit">✉️ Envoyer la demande d’intervention</button>
+<button class="btn submit" type="button" id="prepareReport">✉️ Envoyer la demande d’intervention</button>
 <div id="status" role="status" aria-live="polite"></div>\n<section class="panel" id="emailPreview" aria-live="polite"><h2>Vérifier le courriel avant envoi</h2><p>Voici le contenu qui sera envoyé à <strong>valentineuromed@gmail.com</strong>.</p><pre id="emailPreviewText"></pre><div id="emailPreviewPhotos" class="hint"></div><div class="preview-actions"><button class="btn secondary" type="button" id="editReport">← Modifier le signalement</button><button class="btn submit" type="button" id="confirmSend">✉️ Confirmer et envoyer</button></div></section>
 </form>
 </div>
@@ -118,25 +118,36 @@ function reportText(d){
  '\n\nPhotos jointes : '+(d.photos.length?d.photos.map(f=>f.name).join(', '):'Aucune')+
  '\nVidéos jointes : '+(d.videos.length?d.videos.map(f=>f.name).join(', '):'Aucune');
 }
-$('form').addEventListener('submit',async e=>{
- e.preventDefault();
- updateConditionalFields();
- if(!$('form').reportValidity())return;
- const files=[...$('photos').files];
- const videoFiles=[...$('videos').files];
- if(videoFiles.length>2){alert('Sélectionnez au maximum 2 vidéos.');return}
- if(files.length>5){alert('Sélectionnez au maximum 5 photos.');return}
- if(files.some(f=>f.size>4*1024*1024)){alert('Chaque photo doit faire 4 Mo maximum.');return}
- const total=files.reduce((sum,f)=>sum+f.size,0);
- if(total>8*1024*1024){alert('Le total des photos ne doit pas dépasser 8 Mo.');return}
- if(videoFiles.some(f=>!f.type.startsWith('video/')||f.size>10*1024*1024)){alert('Chaque vidéo doit faire 10 Mo maximum.');return}
- for(const f of videoFiles){try{const u=URL.createObjectURL(f);const d=await getVideoDuration(u);URL.revokeObjectURL(u);if(d>20.5){alert('Chaque vidéo doit durer 20 secondes maximum.');return}}catch(err){alert('Impossible de vérifier la durée d’une vidéo.');return}}
- pendingData=buildReport();
- $('emailPreviewText').textContent=reportText(pendingData);
- $('emailPreviewPhotos').textContent=(files.length?'Photos : '+files.length+' · '+(total/1024/1024).toFixed(2)+' Mo. ':'Aucune photo. ')+(videoFiles.length?'Vidéos : '+videoFiles.length+' · '+(videoFiles.reduce((a,f)=>a+f.size,0)/1024/1024).toFixed(2)+' Mo. Envoi séparé prévu.':'Aucune vidéo.');
- $('emailPreview').style.display='block';
- $('status').style.display='none';
- $('emailPreview').scrollIntoView({behavior:'smooth',block:'start'});
+$('prepareReport').addEventListener('click',async()=>{
+ const btn=$('prepareReport');
+ const status=$('status');
+ status.style.display='block';status.style.background='#173b2b';status.textContent='Préparation de votre signalement…';
+ btn.disabled=true;
+ try{
+  updateConditionalFields();
+  if(!$('form').reportValidity()){status.style.display='none';return}
+  const files=[...$('photos').files];
+  const videoFiles=[...$('videos').files];
+  if(videoFiles.length>2)throw new Error('Sélectionnez au maximum 2 vidéos.');
+  if(files.length>5)throw new Error('Sélectionnez au maximum 5 photos.');
+  if(files.some(f=>f.size>4*1024*1024))throw new Error('Chaque photo doit faire 4 Mo maximum.');
+  const total=files.reduce((sum,f)=>sum+f.size,0);
+  if(total>8*1024*1024)throw new Error('Le total des photos ne doit pas dépasser 8 Mo.');
+  if(videoFiles.some(f=>!f.type.startsWith('video/')||f.size>10*1024*1024))throw new Error('Chaque vidéo doit faire 10 Mo maximum.');
+  for(const f of videoFiles){
+   let url='';
+   try{url=URL.createObjectURL(f);const duration=await getVideoDuration(url);if(duration>20.5)throw new Error('Chaque vidéo doit durer 20 secondes maximum.');}
+   finally{if(url)URL.revokeObjectURL(url);}
+  }
+  pendingData=buildReport();
+  $('emailPreviewText').textContent=reportText(pendingData);
+  $('emailPreviewPhotos').textContent=(files.length?'Photos : '+files.length+' · '+(total/1024/1024).toFixed(2)+' Mo. ':'Aucune photo. ')+(videoFiles.length?'Vidéos : '+videoFiles.length+' · '+(videoFiles.reduce((a,f)=>a+f.size,0)/1024/1024).toFixed(2)+' Mo. Envoi séparé prévu.':'Aucune vidéo.');
+  $('emailPreview').style.display='block';
+  status.style.display='none';
+  $('emailPreview').scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(err){
+  status.style.display='block';status.style.background='#4b2028';status.textContent='Le signalement n’a pas pu être préparé : '+String(err&&err.message||err)+'. Vos photos et vidéos sont conservées dans le formulaire.';
+ }finally{btn.disabled=false;}
 });
 $('editReport').addEventListener('click',()=>{$('emailPreview').style.display='none';$('form').scrollIntoView({behavior:'smooth',block:'start'})});
 const QUEUE_DB='euromed-anomalies-db', QUEUE_STORE='outbox';
