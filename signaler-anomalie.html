@@ -33,8 +33,8 @@
 <section class="panel"><h2>03 · Constat de l’anomalie</h2>
 <label class="field"><span>Technicien ayant fait le constat *</span><input id="technician" required placeholder="Nom et prénom du technicien"></label>
 <label class="field"><span>Description de l’anomalie *</span><textarea id="description" required placeholder="Décrivez le défaut, les circonstances et les éventuels risques…"></textarea></label>
-<label class="field"><span>Photos (facultatif, jusqu’à 5)</span><input id="photos" type="file" accept="image/*" capture="environment" multiple><div class="hint">Vous pouvez prendre une photo avec le téléphone ou joindre des images existantes.</div><div id="preview"></div></label>
-<label class="field"><span>Vidéos de l’anomalie (facultatif, jusqu’à 2 vidéos de 20 secondes)</span><input id="videos" type="file" accept="video/*" capture="environment" multiple><div class="hint">Filmez avec l’iPhone ou sélectionnez une vidéo existante. 10 Mo maximum par vidéo ; chaque vidéo sera envoyée dans un courriel séparé.</div><div id="videoPreview"></div></label>
+<label class="field"><span>Photos (facultatif, jusqu’à 5)</span><input id="photos" type="file" accept="image/*" multiple><div class="hint">Sélectionnez plusieurs images dans la photothèque si nécessaire. Pour prendre une photo, utilisez l’appareil photo puis revenez sélectionner les images.</div><div id="preview"></div></label>
+<label class="field"><span>Vidéos de l’anomalie (facultatif, jusqu’à 2 vidéos de 20 secondes)</span><input id="videos" type="file" accept="video/*" multiple><div class="hint">Sélectionnez une ou deux vidéos dans la photothèque. Pour filmer, utilisez l’appareil photo puis revenez sélectionner la vidéo. 10 Mo maximum par vidéo ; chaque vidéo sera envoyée dans un courriel séparé.</div><div id="videoPreview"></div></label>
 </section>
 <div class="notice">Avant l’envoi, vérifiez le numéro de série et la description. Si le dispositif présente un danger, appliquez les consignes de sécurité internes et mettez-le hors service si nécessaire.</div>
 <button class="btn submit" type="submit">✉️ Envoyer la demande d’intervention</button>
@@ -94,8 +94,7 @@ $('videos').addEventListener('change',async()=>{
   }
 });
 function getVideoDuration(url){return new Promise((resolve,reject)=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>resolve(v.duration);v.onerror=()=>reject(new Error('metadata'));v.src=url})}
-function fileToBase64(file){function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({nom:file.name,type:file.type,base64:String(reader.result).split(',')[1]});reader.onerror=reject;reader.readAsDataURL(file)})}
-function buildReport(){
+function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({nom:file.name,type:file.type,base64:String(reader.result).split(',')[1]});reader.onerror=()=>reject(reader.error||new Error('Lecture du fichier impossible'));reader.readAsDataURL(file)})}\nfunction buildReport(){
  return {
   dispositif:$('device').value,
   autre:$('device').value==='Autre'?$('other').value.trim():'',
