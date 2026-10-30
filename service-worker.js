@@ -1,5 +1,5 @@
 /* EuroMed HUB — cache hors connexion v1 */
-const CACHE_NAME = "euromed-hub-offline-demo-v4";
+const CACHE_NAME = "euromed-hub-offline-demo-v5";
 const BASE = self.registration.scope;
 const REMOTE_FILES = [
   "https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js",
