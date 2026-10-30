@@ -182,7 +182,10 @@ $('confirmSend').addEventListener('click',async()=>{
     await queuePut(item);$('status').style.display='block';$('status').style.background='#3a2c12';$('status').textContent='📴 Signalement enregistré dans la file locale avec ses photos. Il sera proposé à l’envoi lorsque la connexion reviendra. Garde cet appareil et ce navigateur : la file est locale.';
     btn.textContent='✓ Enregistré hors connexion';await queueRefresh();return;
   }
-  await queuePut(item);btn.textContent='✓ Mis en file d’envoi';await queueRefresh();await sendQueued(item.id);
+  await queuePut(item);btn.textContent='✓ Enregistré dans la file';await queueRefresh();
+  // Libérer le verrou : sendQueued gère lui-même le verrou de transmission.
+  sending=false;
+  await sendQueued(item.id);
  }catch(err){
   $('status').style.display='block';$('status').style.background='#4b2028';$('status').textContent='Impossible d’enregistrer le signalement localement : '+String(err&&err.message||err)+'. Ne ferme pas la page ; réessaie avec moins de photos.';
   btn.disabled=false;btn.textContent='↻ Réessayer';
