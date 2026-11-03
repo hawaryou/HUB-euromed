@@ -957,3 +957,16 @@ html body .demo-panel .demo-slide-heading > .demo-slide-icon{display:none!import
 .documentation-wrap .doc-mascot>div{font-size:clamp(18px,4.4vw,23px);flex:1;line-height:1.2}
 .documentation-wrap .doc-mascot img{width:clamp(205px,58vw,270px);height:clamp(205px,58vw,270px);max-width:62%;flex:0 0 auto;object-fit:contain;object-position:center;filter:drop-shadow(0 14px 15px #0008)}
 @media(max-width:390px){.documentation-wrap .doc-mascot{gap:4px;margin-left:0;margin-right:0}.documentation-wrap .doc-mascot img{width:205px;height:205px;max-width:58%}.documentation-wrap .doc-mascot>div{font-size:17px}}
+
+
+/* Nouvelle carte Faire une demande — violet / rose */
+.quick-card.request{background:linear-gradient(135deg,#8b5cf6,#6d28d9 58%,#4c1d95)!important;border:1px solid #c4b5fd!important;box-shadow:0 12px 28px #0005,0 0 20px #8b5cf633!important;color:#fff!important}
+.quick-card.request b,.quick-card.request small,.quick-card.request .arrow{color:#fff!important}
+.quick-card.request .quick-art{background:#ffffff28!important;border-color:#ffffff66!important;color:#fff!important}
+.tool-request{background:linear-gradient(120deg,#7c3aed,#a855f7 58%,#6d28d9)!important;border:1px solid #c4b5fd!important;box-shadow:0 10px 24px #0003,0 0 16px #8b5cf633!important;color:#fff!important}
+.tool-request b,.tool-request small,.tool-request .tool-arrow{color:#fff!important}
+.tool-request .tool-launch-icon{background:#ffffff2e!important;border:1px solid #ffffff55!important;color:#fff!important}
+html[data-theme="light"] .quick-card.request{background:linear-gradient(135deg,#8b5cf6,#6d28d9 58%,#4c1d95)!important;border-color:#c4b5fd!important;color:#fff!important}
+html[data-theme="light"] .quick-card.request b,html[data-theme="light"] .quick-card.request small,html[data-theme="light"] .quick-card.request .arrow{color:#fff!important}
+html[data-theme="light"] .tool-request{background:linear-gradient(120deg,#7c3aed,#a855f7 58%,#6d28d9)!important;border-color:#c4b5fd!important;color:#fff!important}
+html[data-theme="light"] .tool-request b,html[data-theme="light"] .tool-request small,html[data-theme="light"] .tool-request .tool-arrow{color:#fff!important}
