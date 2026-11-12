@@ -1,0 +1,74 @@
+html.euromed-auth-pending body{visibility:hidden!important}
+.euromed-auth-gate{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 18% 16%,rgba(246,177,74,.22),transparent 34%),radial-gradient(ellipse at 83% 80%,rgba(76,135,207,.24),transparent 36%),linear-gradient(145deg,#07152b,#102d4d 58%,#07152b);color:#f8fbff;font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:auto}
+.euromed-auth-card{box-sizing:border-box;width:min(100%,460px);padding:clamp(22px,5vw,36px);border:1px solid rgba(255,255,255,.2);border-radius:26px;background:rgba(9,26,49,.9);box-shadow:0 24px 80px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.13);backdrop-filter:blur(18px)}
+.euromed-auth-brand{display:flex;align-items:center;gap:14px;margin-bottom:22px}.euromed-auth-brand img{width:68px;height:68px;object-fit:contain;padding:7px;border-radius:19px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.24)}.euromed-auth-brand span{font-size:12px;letter-spacing:.13em;color:#f4bd62;font-weight:800}.euromed-auth-card h1{font-size:clamp(25px,7vw,34px);line-height:1.15;margin:0 0 9px}.euromed-auth-card>p{margin:0 0 24px;color:#c6d5e7}.euromed-auth-form{display:grid;gap:14px}.euromed-auth-form label{display:grid;gap:6px;font-weight:700;font-size:14px}.euromed-auth-form input{box-sizing:border-box;width:100%;min-height:50px;border:1px solid rgba(222,235,250,.28);border-radius:13px;padding:11px 13px;background:#f8fafc;color:#14253b;font:inherit}.euromed-auth-form input:focus{outline:3px solid rgba(244,189,98,.48);border-color:#f4bd62}.euromed-auth-primary,.euromed-auth-secondary{min-height:49px;border:0;border-radius:13px;padding:11px 15px;font:inherit;font-weight:800;cursor:pointer}.euromed-auth-primary{margin-top:4px;background:linear-gradient(135deg,#f4c56e,#e89b36);color:#19243a;box-shadow:0 8px 20px rgba(220,151,53,.25)}.euromed-auth-secondary{background:rgba(255,255,255,.1);color:#fff}.euromed-auth-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}.euromed-auth-link{border:0;padding:5px 0;background:none;color:#ffe0a4;font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.euromed-auth-message{min-height:22px;margin:8px 0 0;color:#fff0c7;font-size:14px}.euromed-auth-error{color:#ffc5c5}.euromed-auth-foot{margin-top:20px;color:#aebed1;font-size:12px}.euromed-auth-demo{width:100%;margin-top:12px}.euromed-account-pill{display:inline-flex;align-items:center;gap:8px;max-width:min(42vw,270px);padding:8px 11px;border:1px solid rgba(244,189,98,.48);border-radius:999px;background:rgba(17,42,70,.83);color:inherit;font:600 12px/1.2 system-ui;box-shadow:0 4px 15px rgba(0,0,0,.15)}.euromed-account-pill strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.euromed-account-pill button,.euromed-admin-link{border:0;border-radius:8px;padding:6px 9px;background:#f4bd62;color:#15243a;font:700 12px system-ui;text-decoration:none;cursor:pointer}.euromed-admin-link{display:block;margin:12px 0 0;text-align:center}.euromed-auth-wait{position:fixed;inset:0;z-index:2147483001;display:grid;place-items:center;background:#07152b;color:#fff;font:600 15px system-ui}
+@media(max-width:560px){.euromed-auth-gate{padding:14px}.euromed-auth-card{border-radius:22px}.euromed-account-pill{font-size:11px;padding:7px 8px}}
+.euromed-approval-banner{position:sticky;top:0;z-index:2147482000;padding:11px 16px;background:#fff1d6;color:#603c00;border-bottom:2px solid #e4a83b;text-align:center;font:750 13px/1.4 system-ui,sans-serif;box-shadow:0 4px 16px rgba(35,24,6,.14)}
+.euromed-admin-panel{margin:16px 0;padding:16px;border:1px solid rgba(244,189,98,.48);border-radius:18px;background:rgba(13,39,66,.08)}.euromed-admin-panel h3{margin:6px 0;font-size:18px}.euromed-admin-panel>p{font-size:13px;line-height:1.45;opacity:.8}.euromed-admin-user{display:grid;grid-template-columns:minmax(130px,1fr) auto auto auto;gap:10px;align-items:center;margin:9px 0;padding:11px;border:1px solid rgba(90,115,140,.25);border-radius:14px;background:rgba(255,255,255,.68)}.euromed-admin-user-info{display:grid;gap:3px;min-width:0}.euromed-admin-user-info small{overflow-wrap:anywhere;opacity:.72}.euromed-admin-user-info span{font-size:12px;font-weight:750;color:#805400}.euromed-admin-user label{display:grid;gap:4px;font-size:12px;font-weight:700}.euromed-admin-user select{min-height:38px;border:1px solid #aeb9c3;border-radius:9px;padding:5px 8px;background:#fff;color:#16283b;font:inherit}.euromed-approval-toggle{display:flex!important;align-items:center;gap:7px;white-space:nowrap}.euromed-approval-toggle input{width:20px;height:20px;accent-color:#218b59}.euromed-admin-user button{min-height:38px;border:0;border-radius:10px;padding:7px 10px;background:#174d78;color:#fff;font:700 12px system-ui;cursor:pointer}.euromed-admin-state{padding:10px;border-radius:10px;background:rgba(255,255,255,.55);font-size:13px}.euromed-admin-error{color:#9d2222}
+@media(max-width:650px){.euromed-admin-user{grid-template-columns:1fr 1fr}.euromed-admin-user-info{grid-column:1/-1}.euromed-admin-user button{grid-column:1/-1}.euromed-approval-toggle{align-self:end;min-height:38px}}
+
+/* Administration claire : rôle du Hub et droit d’envoi sont affichés séparément. */
+.euromed-account-pill{max-width:min(52vw,390px)}
+.euromed-account-pill #euromedAdminShortcut{background:#f4bd62;color:#15243a}
+.euromed-admin-panel{background:var(--surface,#f8fafc);color:var(--ink,#14253b);border-color:#d7a94f;box-shadow:0 12px 30px rgba(16,37,59,.12)}
+.euromed-admin-panel h3{font-size:20px}
+.euromed-admin-panel>p{opacity:1;color:var(--muted,#526579)}
+.euromed-admin-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}
+.euromed-admin-summary>div{display:grid;gap:3px;min-height:58px;align-content:center;padding:9px 10px;border:1px solid #d3dce5;border-radius:13px;background:#eef3f8;color:#17314c}
+.euromed-admin-summary b{font-size:21px;line-height:1}
+.euromed-admin-summary span{font-size:11px;font-weight:750;line-height:1.25}
+.euromed-admin-summary .is-allowed{background:#e7f6ec;border-color:#a7d7b5;color:#176638}
+.euromed-admin-summary .is-blocked{background:#fff3df;border-color:#ead09f;color:#754b00}
+.euromed-admin-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr) auto;gap:8px;align-items:end;margin:13px 0}
+.euromed-admin-toolbar label{display:grid;gap:5px;font-size:11px;font-weight:800;color:var(--ink,#14253b)}
+.euromed-admin-toolbar input,.euromed-admin-toolbar select{box-sizing:border-box;width:100%;min-height:42px;padding:8px 10px;border:1px solid #b8c5d1;border-radius:10px;background:#fff;color:#14253b;font:inherit;font-size:12px}
+.euromed-admin-toolbar button{min-height:42px;border:1px solid #a8bacb;border-radius:10px;padding:8px 10px;background:#eaf1f7;color:#17314c;font-weight:800;cursor:pointer}
+.euromed-admin-user{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0;padding:13px;border:1px solid #cbd6e0;border-radius:15px;background:#fff;color:#14253b;box-shadow:0 4px 12px rgba(16,37,59,.06)}
+.euromed-admin-user-info{display:grid;gap:5px}
+.euromed-admin-user-name{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.euromed-admin-user-info small{color:#526579}
+.euromed-admin-created{font-size:11px;color:#627487}
+.euromed-admin-role,.euromed-admin-access-state{display:inline-flex;align-items:center;justify-content:center;width:max-content;max-width:100%;border:1px solid;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:850;letter-spacing:.04em}
+.euromed-admin-role.is-admin{border-color:#d9b052;background:#fff4d5;color:#6d4a00}
+.euromed-admin-role.is-user{border-color:#a9c7e4;background:#edf6ff;color:#174d78}
+.euromed-admin-access-state{display:grid;justify-content:start;gap:2px;width:auto;border-radius:11px;letter-spacing:0}
+.euromed-admin-access-state span{font-size:11px;font-weight:600}
+.euromed-admin-access-state.is-allowed{border-color:#a7d7b5;background:#e7f6ec;color:#176638}
+.euromed-admin-access-state.is-blocked{border-color:#ead09f;background:#fff3df;color:#754b00}
+.euromed-admin-user-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) auto;gap:8px;align-items:end;padding-top:9px;border-top:1px solid #e1e7ed}
+.euromed-admin-user-controls>label:first-child{display:grid;gap:5px;font-size:11px;font-weight:800}
+.euromed-admin-user-controls select{box-sizing:border-box;width:100%;min-height:42px;border:1px solid #b8c5d1;border-radius:10px;padding:7px 9px;background:#fff;color:#14253b;font:inherit;font-size:12px}
+.euromed-admin-user-controls .euromed-approval-toggle{white-space:normal!important;gap:7px;font-size:11px}
+.euromed-admin-user-controls button{min-height:42px;padding:8px 11px;background:#174d78;color:#fff}
+.euromed-admin-link{padding:10px 13px;font-size:13px}
+.euromed-admin-state{color:#17314c}
+@media(max-width:650px){.euromed-admin-toolbar{grid-template-columns:1fr 1fr}.euromed-admin-toolbar label:first-child{grid-column:1/-1}.euromed-admin-toolbar button{grid-column:1/-1}.euromed-admin-user-controls{grid-template-columns:1fr 1fr}.euromed-admin-user-controls>label:first-child{grid-column:1/-1}.euromed-admin-user-controls button{grid-column:1/-1}.euromed-admin-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.euromed-account-pill{max-width:min(57vw,340px)}.euromed-account-pill strong{max-width:22vw}}
+.euromed-account-pill strong{min-width:0;flex:1}
+.euromed-account-pill #euromedAdminShortcut{white-space:nowrap;padding:7px 9px;font-size:11px}
+.admin-dialog{width:min(940px,calc(100% - 24px));max-height:92dvh}
+.admin-dialog-card{box-sizing:border-box;position:relative;display:flex;flex-direction:column;gap:13px;max-height:92dvh;overflow:auto;padding:26px;color:var(--ink,#14253b)}
+.admin-dialog-card h2{margin:-10px 48px 2px 0;font-size:clamp(22px,4vw,30px);letter-spacing:-.03em}
+.admin-dialog-card .admin-invite-link{align-self:flex-start;min-height:42px;margin:0 0 2px;padding:10px 14px}
+.admin-dialog-card #euromedAdminProfiles{width:100%}
+.admin-dialog-card .euromed-admin-toolbar{grid-template-columns:minmax(0,1.35fr) minmax(150px,.9fr) auto auto}
+.admin-dialog-card .euromed-admin-toolbar button{white-space:nowrap}
+.euromed-admin-mail-stop,.euromed-admin-invite,.euromed-admin-monitor-section{margin:12px 0;padding:14px;border:1px solid #d2dce6;border-radius:15px;background:#f4f7fa;color:#14253b}
+.euromed-admin-mail-stop{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;border-color:#d8a849;background:linear-gradient(135deg,#fff7e4,#fff);box-shadow:0 5px 18px #13263a12}
+.euromed-admin-mail-stop>div{display:grid;gap:4px}.euromed-admin-mail-stop>div span,.euromed-admin-invite>p,.euromed-admin-monitor-section>p{font-size:12px;color:#526579;margin:0}
+.admin-mail-toggle{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:800;white-space:nowrap}.admin-mail-toggle input{width:22px;height:22px;accent-color:#218b59}
+#euromedMailStatus{grid-column:1/-1;margin:0;font-size:12px;font-weight:750;color:#526579}
+.euromed-admin-invite h3,.euromed-admin-monitor-section h3{margin:0 0 10px;font-size:16px}
+.euromed-admin-invite>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.75fr) auto;gap:8px}
+.euromed-admin-invite input,.euromed-admin-user-controls input{box-sizing:border-box;width:100%;min-width:0;min-height:42px;border:1px solid #b8c5d1;border-radius:10px;padding:8px 10px;background:#fff;color:#14253b;font:inherit;font-size:12px}
+.euromed-admin-invite button,.euromed-admin-monitor-section>button{min-height:42px;border:0;border-radius:10px;padding:8px 12px;background:#174d78;color:#fff;font-weight:800;cursor:pointer}
+.euromed-admin-invite .euromed-admin-link{display:inline-block;margin-top:9px;background:#eaf1f7;color:#17314c;border:1px solid #b8c5d1}
+.euromed-admin-user-controls{grid-template-columns:repeat(3,minmax(0,1fr))}
+.euromed-admin-user-controls label{min-width:0}
+.euromed-admin-user-controls .euromed-approval-toggle{display:flex;min-height:42px;padding:7px 9px;border:1px solid #d6dfe8;border-radius:10px;background:#f6f9fb;color:#17314c}
+.euromed-admin-actions{display:flex;flex-wrap:wrap;gap:7px;padding-top:9px;border-top:1px solid #e1e7ed}
+.euromed-admin-actions button{min-height:38px;border:1px solid #b7c5d2;border-radius:9px;padding:7px 10px;background:#eef3f8;color:#17314c;font-size:11px;font-weight:800;cursor:pointer}
+.euromed-admin-actions button.is-suspend{border-color:#e3b7b1;background:#fff0ee;color:#8c3027}.euromed-admin-actions button.is-reactivate{border-color:#a8d6b7;background:#e9f7ed;color:#176638}
+.euromed-admin-app-counts{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.euromed-admin-app-counts span{padding:6px 9px;border:1px solid #d2dce6;border-radius:999px;background:#fff;font-size:11px}
+.euromed-admin-events{display:grid;gap:5px;max-height:360px;overflow:auto}.euromed-admin-events>div{display:grid;grid-template-columns:80px minmax(100px,1fr) auto;gap:9px;align-items:center;padding:8px 10px;border:1px solid #e0e6ec;border-radius:9px;background:#fff;font-size:11px}.euromed-admin-events time{color:#526579}.euromed-admin-events small{grid-column:2/-1;color:#9d3028}.euromed-admin-events .event-accepted{color:#176638}.euromed-admin-events .event-failed{color:#9d3028}.euromed-admin-events .event-blocked{color:#805400}
+@media(max-width:700px){.admin-dialog{width:calc(100% - 14px);max-height:94dvh}.admin-dialog-card{max-height:94dvh;padding:20px 14px}.admin-dialog-card .euromed-admin-toolbar{grid-template-columns:1fr 1fr}.admin-dialog-card .euromed-admin-toolbar label:first-child{grid-column:1/-1}.admin-dialog-card .euromed-admin-toolbar button{grid-column:auto}.euromed-account-pill{max-width:calc(100vw - 184px);gap:5px;padding:6px 7px}.euromed-account-pill strong{max-width:none;font-size:10px}.euromed-account-pill #euromedAdminShortcut{font-size:10px;padding:6px 7px}}
+@media(max-width:650px){.euromed-admin-invite>div{grid-template-columns:1fr}.euromed-admin-user-controls{grid-template-columns:1fr 1fr}.euromed-admin-user-controls label:nth-of-type(n+4){grid-column:1/-1}.euromed-admin-events>div{grid-template-columns:72px 1fr}.euromed-admin-events time{grid-column:2}.euromed-admin-actions button{flex:1 1 46%}.euromed-admin-mail-stop{grid-template-columns:1fr}.admin-mail-toggle{white-space:normal}}
