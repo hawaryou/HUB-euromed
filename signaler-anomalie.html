@@ -12,6 +12,7 @@
 <script>window.__zbarPolyfillReady=import('https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.23/dist/main.js').then(m=>{window.BarcodeDetectorPolyfill=m.BarcodeDetectorPolyfill;return m.BarcodeDetectorPolyfill}).catch(error=>{console.error('Chargement ZBar/WebAssembly impossible :',error);window.__zbarPolyfillError=error;throw error});</script>
 <script src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
 <style>.scan-actions,.scanner-tools{display:flex;gap:8px;flex-wrap:wrap}.scan-actions .btn,.scanner-tools .btn{flex:1;min-width:110px}.scanner{display:none;margin-top:12px;padding:10px;background:#000;border-radius:14px;overflow:hidden}.scanner-title{color:#fff;text-align:center;font-weight:800;margin:4px 0 8px}.scanner .hint{color:#ddd;text-align:center}.reader{position:relative;width:100%;overflow:hidden;border-radius:8px}.barcode-reader{position:relative;background:#000;min-height:220px}.barcode-reader:after{content:'';position:absolute;left:3%;right:3%;top:42%;height:26%;border:3px solid rgba(255,255,255,.9);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.18);pointer-events:none}.scan-overlay-2d{position:absolute;left:50%;top:50%;width:62%;aspect-ratio:1;transform:translate(-50%,-50%);border:3px solid rgba(255,255,255,.9);border-radius:10px;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;z-index:3}.scan-overlay-2d span{background:rgba(0,0,0,.65);color:#fff;padding:5px 9px;border-radius:6px;font-size:13px;font-weight:700}@media(max-width:520px){.scan-actions{display:grid;grid-template-columns:1fr}.scan-actions .btn,.scanner-tools .btn{min-height:44px}}</style>  <link rel="stylesheet" href="https://hawaryou.github.io/HUB-euromed/euromed-auth.css">
+<link rel="stylesheet" href="assets/euromed-global-backdrop.css?v=1">
 </head><body><div class="wrap">
 <a class="back" href="https://hawaryou.github.io/HUB-euromed/">‹ Retour au Hub EuroMed</a>
 <header class="hero"><div class="eyebrow">HUB TECHNICIEN · QUALITÉ & SÉCURITÉ</div><h1>⚠️ Signaler une anomalie</h1><p>Décrivez le problème constaté sur un dispositif médical pour préparer une demande d’intervention EuroMed.</p></header>
@@ -407,4 +408,5 @@ queueRefresh();
 })();
 </script>
   <script src="https://hawaryou.github.io/HUB-euromed/euromed-auth.js"></script>
+<script src="assets/euromed-required-feedback.js?v=1" defer></script>
 </body></html>
